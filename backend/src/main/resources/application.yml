@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: MoneyMindfulBackend
+  datasource:
+    url: jdbc:mysql://localhost:3306/money_mindful
+    username: mm_user
+    password: database_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  security:
+    user:
+      name: admin
+      password: secret
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: ERROR
+    org.springframework.web: DEBUG
+    com.auth0.example: TRACE
+
