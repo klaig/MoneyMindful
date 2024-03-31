@@ -1,4 +1,4 @@
-# MoneyMindful
+# MoneyMindful goals
 
 ## Overview
 MoneyMindful is a comprehensive personal finance management application designed to help users track expenses, set budgets, monitor savings, and analyze spending patterns. This platform offers an intuitive way for users to gain control over their finances and make informed financial decisions.
