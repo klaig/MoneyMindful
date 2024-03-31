@@ -32,6 +32,7 @@ public class SecurityConfig {
                 // Configure request authorization
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/secure-endpoint").authenticated()
                         .anyRequest().authenticated())
                 // Add custom JWT filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
