@@ -6,12 +6,14 @@ import java.time.LocalDateTime;
 
 // Represents an individual expense
 @Entity
+@Table(name = "expenses")
 public class Expense {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -22,8 +24,9 @@ public class Expense {
     private String category; // This could be an enum or a separate entity
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
 
+    @Column(length = 500)
     private String notes;
 
 }

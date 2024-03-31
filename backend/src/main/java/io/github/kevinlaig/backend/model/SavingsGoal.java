@@ -7,17 +7,19 @@ import java.time.LocalDate;
 // Used to track the user's long-term savings goals,
 // including fields for goal description, target amount, current savings, and target date
 @Entity
+@Table(name = "savings_goals")
 public class SavingsGoal {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
-    private String goalName;
+    private String name;
 
     @Column(nullable = false)
     private BigDecimal targetAmount;
@@ -27,5 +29,6 @@ public class SavingsGoal {
 
     @Column(nullable = false)
     private LocalDate targetDate;
+
 
 }
