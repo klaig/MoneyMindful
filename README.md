@@ -6,7 +6,7 @@ MoneyMindful is a comprehensive personal finance management application designed
 ## Features
 
 ### User Authentication
-- Secure login/logout functionality using Spring Security and OAuth2.
+- Secure login/logout functionality using Spring Security.
 - Implement JSON Web Tokens (JWT) for secure API access.
 
 ### Expense Tracking
