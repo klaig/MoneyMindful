@@ -1,12 +1,19 @@
 package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 // Represents an individual expense
 @Entity
 @Table(name = "expenses")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Expense {
 
     @Id
