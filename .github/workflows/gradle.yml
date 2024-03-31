@@ -35,7 +35,25 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+      
+    - name: Run tests
+      run: ./gradlew test
 
+    # Add a code quality check step
+    - name: Code Quality Check
+      run: ./gradlew checkstyleMain checkstyleTest
+
+    # Add a security scan step
+    - name: Security Scan
+      run: ./gradlew dependencyCheckAnalyze
+
+    # Collect and upload artifacts
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: packaged-artifacts
+        path: build/libs/*.jar
+        
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
