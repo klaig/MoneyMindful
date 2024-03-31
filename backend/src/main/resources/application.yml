@@ -25,3 +25,7 @@ logging:
     org.springframework.web: DEBUG
     com.auth0.example: TRACE
 
+jwt:
+  secret: 'JWTSecretKey'
+  expiration:
+    time: 86400000 # 24 hours in milliseconds

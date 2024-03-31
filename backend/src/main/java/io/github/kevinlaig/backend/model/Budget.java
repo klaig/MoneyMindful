@@ -1,6 +1,10 @@
 package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -8,6 +12,9 @@ import java.util.Map;
 // and tracking of the budget categories.
 @Entity
 @Table(name = "budgets")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Budget {
 
     @Id

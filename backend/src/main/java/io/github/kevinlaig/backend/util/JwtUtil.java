@@ -1,31 +1,49 @@
-package io.github.kevinlaig.backend.util;
+package io.github.kevinlaig.backend.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.stereotype.Service;
+import com.auth0.jwt.interfaces.JWTVerifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Service
+@Component
 public class JwtUtil {
 
-    private final String SECRET = "your_secret_key"; // Replace with your secret key
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration.time}")
+    private long expirationTime;
 
     public String generateToken(String username) {
+        Date issuedAt = new Date();
+        Date expiresAt = new Date(issuedAt.getTime() + expirationTime);
+
         return JWT.create()
                 .withSubject(username)
-                .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) // Token validity 10 minutes
-                .sign(Algorithm.HMAC256(SECRET));
+                .withIssuedAt(issuedAt)
+                .withExpiresAt(expiresAt)
+                .sign(Algorithm.HMAC256(secret));
     }
 
-    public String validateTokenAndGetUsername(String token) {
-        DecodedJWT jwt = JWT.require(Algorithm.HMAC256(SECRET))
-                .build()
-                .verify(token);
-        return jwt.getSubject();
+    public boolean validateToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return true;
+        } catch (JWTVerificationException exception) {
+            // Log token verification exception
+            return false;
+        }
     }
 
-    // Additional methods for claims and token verification can be added here
+    public String getUsernameFromToken(String token) {
+        DecodedJWT decodedJWT = JWT.decode(token);
+        return decodedJWT.getSubject();
+    }
 }

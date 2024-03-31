@@ -1,6 +1,10 @@
 package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -8,6 +12,9 @@ import java.time.LocalDate;
 // including fields for goal description, target amount, current savings, and target date
 @Entity
 @Table(name = "savings_goals")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SavingsGoal {
 
     @Id
@@ -29,6 +36,5 @@ public class SavingsGoal {
 
     @Column(nullable = false)
     private LocalDate targetDate;
-
 
 }
