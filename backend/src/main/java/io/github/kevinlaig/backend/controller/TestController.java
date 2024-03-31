@@ -11,7 +11,7 @@ public class TestController {
         return "Hello, World!";
     }
 
-    @GetMapping("/api/secure-endpoint")
+    @GetMapping("/api/admin/secure-endpoint")
     public String secureEndpoint() {
         return "This is a secure endpoint";
     }

@@ -56,13 +56,13 @@ public class SecurityConfigTest {
 
     @Test
     public void shouldGiveForbiddenIfNoToken() throws Exception {
-        mockMvc.perform(get("/api/secure-endpoint"))
+        mockMvc.perform(get("/api/admin/secure-endpoint"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void shouldGiveOkIfValidToken() throws Exception {
-        mockMvc.perform(get("/api/secure-endpoint")
+        mockMvc.perform(get("/api/admin/secure-endpoint")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
     }

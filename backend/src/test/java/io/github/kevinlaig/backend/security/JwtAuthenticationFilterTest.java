@@ -51,14 +51,14 @@ public class JwtAuthenticationFilterTest {
 
     @Test
     public void shouldAllowAccessWithValidToken() throws Exception {
-        mockMvc.perform(get("/api/secure-endpoint")
+        mockMvc.perform(get("/api/admin/secure-endpoint")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void shouldDenyAccessWithInvalidToken() throws Exception {
-        mockMvc.perform(get("/api/secure-endpoint")
+        mockMvc.perform(get("/api/admin/secure-endpoint")
                         .header("Authorization", "Bearer " + "invalidtoken"))
                 .andExpect(status().isForbidden());
     }
