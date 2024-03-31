@@ -1,4 +1,4 @@
-package io.github.kevinlaig.backend.utils;
+package io.github.kevinlaig.backend.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
