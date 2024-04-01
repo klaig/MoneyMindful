@@ -33,10 +33,6 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
       
-    # Change directory to 'backend'
-    - name: Change to Backend Directory
-      run: cd backend
-      
     - name: Grant execute permission for gradlew
       run: chmod +x ./backend/gradlew
 
@@ -48,11 +44,11 @@ jobs:
 
     # Add a code quality check step
     - name: Code Quality Check
-      run: ./gradlew checkstyleMain checkstyleTest
+      run: ./backend/gradlew checkstyleMain checkstyleTest
 
     # Add a security scan step
     - name: Security Scan
-      run: ./gradlew dependencyCheckAnalyze
+      run: ./backend/gradlew dependencyCheckAnalyze
 
     # Collect and upload artifacts
     - name: Upload artifacts
