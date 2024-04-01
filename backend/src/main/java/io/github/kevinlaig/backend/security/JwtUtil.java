@@ -4,11 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
+/**
+ * Utility class for JWT operations.
+ */
 @Component
 public class JwtUtil {
 
@@ -18,6 +20,12 @@ public class JwtUtil {
     @Value("${jwt.expiration.time}")
     private long expirationTime;
 
+    /**
+     * Generates a JWT token.
+     *
+     * @param username the username
+     * @return the JWT token
+     */
     public String generateToken(String username) {
         Date issuedAt = new Date();
         Date expiresAt = new Date(issuedAt.getTime() + expirationTime);
@@ -29,6 +37,12 @@ public class JwtUtil {
                 .sign(Algorithm.HMAC256(secret));
     }
 
+    /**
+     * Validates a JWT token.
+     *
+     * @param token the token
+     * @return true if the token is valid, false otherwise
+     */
     public boolean validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -41,8 +55,14 @@ public class JwtUtil {
         }
     }
 
+    /**
+     * Extracts the username from a JWT token.
+     *
+     * @param token the token
+     * @return the username
+     */
     public String getUsernameFromToken(String token) {
-        DecodedJWT decodedJWT = JWT.decode(token);
-        return decodedJWT.getSubject();
+        DecodedJWT decodedJwt = JWT.decode(token);
+        return decodedJwt.getSubject();
     }
 }

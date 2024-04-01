@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
-// Represents the application's users
+/**
+ * User entity.
+ */
 @Entity
 @Table(name = "users")
 @Data
@@ -40,6 +39,15 @@ public class User {
     )
     private Role role;
 
+    /**
+     * Constructor for creating a user without specifying an ID.
+     *
+     * @param email The email of the user.
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @param fullName The full name of the user.
+     * @param role The role of the user.
+     */
     public User(String email, String username, String password, String fullName, Role role) {
         this.email = email;
         this.username = username;

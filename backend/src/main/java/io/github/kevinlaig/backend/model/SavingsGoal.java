@@ -1,15 +1,15 @@
 package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-// Used to track the user's long-term savings goals,
-// including fields for goal description, target amount, current savings, and target date
+/**
+ * SavingsGoal entity.
+ */
 @Entity
 @Table(name = "savings_goals")
 @Data

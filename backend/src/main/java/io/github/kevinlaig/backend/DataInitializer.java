@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Data initializer for the application.
+ */
 @Component
 @Profile("!test") // Exclude this runner in test profile
 public class DataInitializer implements CommandLineRunner {
@@ -27,7 +30,11 @@ public class DataInitializer implements CommandLineRunner {
             Role adminRole = new Role(Roles.ADMIN);
 
             // Create admin user
-            User adminUser = new User("admin@example.com", "admin", passwordEncoder.encode("admin123"), "Admin User", adminRole);
+            User adminUser = new User("admin@example.com",
+                    "admin",
+                    passwordEncoder.encode("admin123"),
+                    "Admin User",
+                    adminRole);
 
             userRepository.save(adminUser);
         }
@@ -36,7 +43,11 @@ public class DataInitializer implements CommandLineRunner {
             Role userRole = new Role(Roles.USER);
 
             // Create normal user
-            User normalUser = new User("kevin@example.com", "kevin", passwordEncoder.encode("kevin123"), "Kevin Laig", userRole);
+            User normalUser = new User("kevin@example.com",
+                    "kevin",
+                    passwordEncoder.encode("kevin123"),
+                    "Kevin Laig",
+                    userRole);
 
             userRepository.save(normalUser);
         }

@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Test for user details service.
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 public class UserDetailsServiceTest {
@@ -25,6 +27,9 @@ public class UserDetailsServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Setup before each test.
+     */
     @BeforeEach
     public void setup() {
         // Creating a test user role
@@ -34,6 +39,7 @@ public class UserDetailsServiceTest {
         User testUser = new User("test@example.com", "kevin", "password", "Test User", role);
         userRepository.save(testUser);
     }
+
     @Test
     public void shouldLoadUserByUsername() {
         UserDetails userDetails = userDetailsService.loadUserByUsername("kevin");
