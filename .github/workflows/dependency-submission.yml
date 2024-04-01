@@ -27,3 +27,7 @@ jobs:
 
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@v3
+      with:
+
+        # The gradle project is not in the root of the repository.
+        build-root-directory: ./backend/
