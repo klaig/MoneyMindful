@@ -48,7 +48,7 @@ jobs:
 
     # Add a code quality check step
     - name: Code Quality Check
-      run: ./gradlew checkstyleMain checkstyleTest
+      run: ./gradlew check test
       
     # Add a security scan step
     - name: Security Scan
