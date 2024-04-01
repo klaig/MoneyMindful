@@ -5,6 +5,10 @@ on: [ push ]
 permissions:
   contents: write
 
+defaults:
+  run:
+    working-directory: ./backend
+    
 jobs:
   dependency-submission:
     runs-on: ubuntu-latest
