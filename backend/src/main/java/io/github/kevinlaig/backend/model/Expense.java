@@ -1,6 +1,8 @@
 package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,9 +27,11 @@ public class Expense {
     private User user;
 
     @Column(nullable = false)
+    @Min(value = 0, message = "Amount must be greater than 0")
     private BigDecimal amount;
 
     @Column(nullable = false)
+    @NotEmpty(message = "Category is required")
     private String category; // This could be an enum or a separate entity
 
     @Column(nullable = false)
