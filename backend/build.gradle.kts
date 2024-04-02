@@ -15,7 +15,6 @@ java {
 
 repositories {
 	mavenCentral()
-	google()
 }
 
 dependencies {
@@ -28,6 +27,7 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("com.h2database:h2")
 }
+
 
 checkstyle {
 	toolVersion = "10.14.2"
