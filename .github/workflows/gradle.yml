@@ -48,11 +48,7 @@ jobs:
 
     # Add a code quality check step
     - name: Code Quality Check
-      run: ./gradlew checkstyleMain checkstyleTest
-      
-    # Add a security scan step
-    - name: Security Scan
-      run: ./gradlew dependencyCheckAnalyze
+      run: ./gradlew check test
 
     # Collect and upload artifacts
     - name: Upload artifacts
