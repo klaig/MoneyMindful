@@ -1,0 +1,33 @@
+name: Dependency Submission
+
+on: [ push ]
+
+permissions:
+  contents: write
+  
+defaults:
+  run:
+    working-directory: ./backend
+    
+jobs:
+  dependency-submission:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'corretto'
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
+    - name: Generate and submit dependency graph
+      uses: gradle/actions/dependency-submission@v3
+      with:
+
+        # The gradle project is not in the root of the repository.
+        build-root-directory: ./backend/

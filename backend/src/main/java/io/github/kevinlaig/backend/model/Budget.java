@@ -1,15 +1,15 @@
 package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
-// Represents the monthly budget set by the user, including fields for total budget amount
-// and tracking of the budget categories.
+/**
+ * Budget entity.
+ */
 @Entity
 @Table(name = "budgets")
 @Data

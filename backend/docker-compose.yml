@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/money_mindful
+      - SPRING_DATASOURCE_USERNAME=mm_user
+      - SPRING_DATASOURCE_PASSWORD=database_password
+      - SPRING_JPA_HIBERNATE_DDL-AUTO=create-drop
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: money_mindful
+      MYSQL_USER: mm_user
+      MYSQL_PASSWORD: database_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

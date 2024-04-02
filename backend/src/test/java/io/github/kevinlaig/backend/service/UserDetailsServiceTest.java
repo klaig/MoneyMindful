@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Test for user details service.
+ */
 @SpringBootTest
+@ActiveProfiles("test")
 public class UserDetailsServiceTest {
 
     @Autowired
@@ -23,27 +27,26 @@ public class UserDetailsServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    /**
+     * Setup before each test.
+     */
     @BeforeEach
     public void setup() {
-        // Clean up the database
-        userRepository.findByEmail("MariMaasikas@gmail.com").ifPresent(user -> userRepository.delete(user));
-
-        // Create a role
+        // Creating a test user role
         Role role = new Role(Roles.USER);
 
-        // Create a test user
-        User testUser = new User("MariMaasikas@gmail.com", "Mari1998", passwordEncoder.encode("MariParool"), "Mari Maasikas", role); // Set user details
-        testUser = userRepository.save(testUser);
+        // Creating and saving the test user
+        User testUser = new User("test@example.com", "kevin", "password", "Test User", role);
+        userRepository.save(testUser);
     }
 
     @Test
     public void shouldLoadUserByUsername() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("Mari1998");
+        UserDetails userDetails = userDetailsService.loadUserByUsername("kevin");
         assertThat(userDetails).isNotNull();
-        assertThat(userDetails.getUsername()).isEqualTo("Mari1998");
+        assertThat(userDetails.getUsername()).isEqualTo("kevin");
         assertThat(userDetails.getAuthorities()).isNotEmpty();
+        assertThat(userDetails.getAuthorities()).extracting("authority")
+                .contains("ROLE_USER");
     }
 }

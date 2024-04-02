@@ -3,6 +3,7 @@ plugins {
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
 	id("io.freefair.lombok") version "8.6"
+	id("checkstyle")
 }
 
 group = "io.github.kevinlaig"
@@ -25,8 +26,21 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("com.h2database:h2")
 }
 
+
+checkstyle {
+	toolVersion = "10.14.2"
+	config = resources.text.fromFile("google_checks.xml")
+}
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.withType<Checkstyle> {
+	reports {
+		html.required.set(true)
+		xml.required.set(true)
+	}
 }
