@@ -27,23 +27,37 @@ public class ExpenseService {
     return expenseRepository.save(expense);
   }
 
-  // Get all Expenses
+  // Get all Expenses for the authenticated user
   public List<Expense> findAllUserExpenses(User user) {
     return expenseRepository.findByUser(user);
   }
 
   // Get an Expense by ID
-  public Optional<Expense> findExpenseById(Long id) {
-    return expenseRepository.findById(id);
+  public Optional<Expense> findExpenseByIdAndUser(Long id, User user) {
+    return expenseRepository.findByIdAndUser(id, user);
   }
 
   // Update an Expense
-  public Expense updateExpense(Expense expense) {
-    return expenseRepository.save(expense);
+  public Optional<Expense> updateExpense(Long id, Expense expenseDetails, User user) {
+    Optional<Expense> existingExpense = expenseRepository.findByIdAndUser(id, user);
+    if (existingExpense.isPresent()) {
+      Expense updatedExpense = existingExpense.get();
+      updatedExpense.setAmount(expenseDetails.getAmount());
+      updatedExpense.setCategory(expenseDetails.getCategory());
+      updatedExpense.setDateTime(expenseDetails.getDateTime());
+      updatedExpense.setNotes(expenseDetails.getNotes());
+      return Optional.of(expenseRepository.save(updatedExpense));
+    }
+    return Optional.empty();
   }
 
   // Delete an Expense
-  public void deleteExpense(Long id) {
-    expenseRepository.deleteById(id);
+  public boolean deleteExpense(Long id, User user) {
+    Optional<Expense> existingExpense = expenseRepository.findByIdAndUser(id, user);
+    if (existingExpense.isPresent()) {
+      expenseRepository.deleteById(id);
+      return true;
+    }
+    return false;
   }
 }
