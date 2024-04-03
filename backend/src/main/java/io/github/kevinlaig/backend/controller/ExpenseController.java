@@ -7,6 +7,7 @@ import io.github.kevinlaig.backend.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -29,15 +30,25 @@ public class ExpenseController {
     this.userRepository = userRepository;
   }
 
-  // Create an Expense
+  /**
+   * Create an Expense
+   *
+   * @param expense Expense
+   * @return Created Expense
+   */
   @PostMapping
   public ResponseEntity<Expense> createExpense(Expense expense) {
     return ResponseEntity.ok(expenseService.createExpense(expense));
   }
 
-  // Get all Expenses for the authenticated user
+  /**
+   * Get all Expenses for the authenticated user
+   *
+   * @param principal Principal
+   * @return List of Expenses
+   */
   @GetMapping
-  public ResponseEntity<List<Expense>> getAllExpenses(Principal principal) {
+  public ResponseEntity<List<Expense>> getAllUserExpenses(Principal principal) {
     Optional<User> userOptional = userRepository.findByUsername(principal.getName());
     if (userOptional.isPresent()) {
       User user = userOptional.get();
@@ -51,35 +62,37 @@ public class ExpenseController {
 
   // Get an Expense by ID
   @GetMapping("/{id}")
-  public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
-    Optional<Expense> expense = expenseService.findExpenseById(id);
-    return expense.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+  public ResponseEntity<Expense> getExpenseByIdAndUser(@PathVariable Long id, Principal principal) {
+    String username = principal.getName();
+    User user = userRepository.findByUsername(username)
+                              .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+    Optional<Expense> expense = expenseService.findExpenseByIdAndUser(id, user);
+    return expense.map(ResponseEntity::ok)
+                  .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   // Update an Expense
   @PutMapping("/{id}")
-  public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expense) {
-    Optional<Expense> expenseData = expenseService.findExpenseById(id);
+  public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expenseDetails, Principal principal) {
+    String username = principal.getName();
+    User user = userRepository.findByUsername(username)
+      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    if (expenseData.isPresent()) {
-      Expense updatedExpense = expenseData.get();
-      updatedExpense.setAmount(expense.getAmount());
-      updatedExpense.setDateTime(expense.getDateTime());
-      updatedExpense.setCategory(expense.getCategory());
-      updatedExpense.setNotes(expense.getNotes());
-      return ResponseEntity.ok(expenseService.updateExpense(updatedExpense));
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+    Optional<Expense> updatedExpense = expenseService.updateExpense(id, expenseDetails, user);
+    return updatedExpense.map(ResponseEntity::ok)
+      .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   // Delete an Expense
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteExpense(@PathVariable Long id) {
-    Optional<Expense> expense = expenseService.findExpenseById(id);
+  public ResponseEntity<?> deleteExpense(@PathVariable Long id, Principal principal) {
+    String username = principal.getName();
+    User user = userRepository.findByUsername(username)
+      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    if (expense.isPresent()) {
-      expenseService.deleteExpense(id);
+    boolean isDeleted = expenseService.deleteExpense(id, user);
+    if (isDeleted) {
       return ResponseEntity.ok().build();
     } else {
       return ResponseEntity.notFound().build();
