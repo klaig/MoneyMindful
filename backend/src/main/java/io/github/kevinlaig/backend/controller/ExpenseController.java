@@ -57,7 +57,6 @@ public class ExpenseController {
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
-
   }
 
   // Get an Expense by ID

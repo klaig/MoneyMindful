@@ -1,10 +1,13 @@
 import React from 'react';
 import {Box, List, ListItemButton, ListItemIcon, ListItemText, Drawer, Toolbar, Typography} from '@mui/material';
 import { Home, AccountBalanceWallet, TrendingUp, Settings } from '@mui/icons-material';
+import {useNavigate} from "react-router-dom";
 
 const drawerWidth = 240;
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+
     return (
         <Drawer
             variant="permanent"
@@ -28,7 +31,7 @@ const Sidebar = () => {
             </Toolbar>
             <Box sx={{ overflow: 'auto' }}>
                 <List>
-                    <ListItemButton key="Home">
+                    <ListItemButton onClick={() => navigate('/dashboard')} key="Home">
                         <ListItemIcon>
                             <Home />
                         </ListItemIcon>
@@ -40,7 +43,7 @@ const Sidebar = () => {
                         </ListItemIcon>
                         <ListItemText primary="Budgets" />
                     </ListItemButton>
-                    <ListItemButton key="Expenses">
+                    <ListItemButton onClick={() => navigate('/expenses')} key="Expenses">
                         <ListItemIcon>
                             <TrendingUp />
                         </ListItemIcon>
