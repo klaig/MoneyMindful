@@ -64,6 +64,18 @@ public class DataInitializer implements CommandLineRunner {
             User user = userRepository.findByUsername("kevin").get();
             expenseRepository.save(new Expense(null, user, new BigDecimal("10.0"), "Lunch", LocalDateTime.now(), "Food"));
         }
+        if (userRepository.findByUsername("lisa").isEmpty()) {
+            // Create user
+            Role userRole = new Role(Roles.USER);
 
+            // Create normal user
+            User normalUser = new User("lisa@example.com",
+              "lisa",
+              passwordEncoder.encode("lisa123"),
+              "Lisa Brand",
+              userRole);
+
+            userRepository.save(normalUser);
+        }
     }
 }

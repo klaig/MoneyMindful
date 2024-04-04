@@ -1,20 +1,30 @@
-# Start with a base image containing Java runtime using Amazon Corretto
-FROM amazoncorretto:21
+# Stage 1: Build the application
+FROM amazoncorretto:21 as build
 
 # Add Maintainer Info
 LABEL maintainer="kevin@example.com"
 
-## Add a volume pointing to /tmp
-#VOLUME /tmp
-#
-## Make port 8080 available to the world outside this container
-#EXPOSE 8080
+# Set the working directory in the Docker image
+WORKDIR /app
 
-# The application's jar file
-ARG JAR_FILE=build/libs/*.jar
+# Copy the Gradle configuration files and wrapper
+COPY build.gradle.kts settings.gradle.kts gradlew gradlew.bat /app/
+COPY gradle /app/gradle
 
-# Add the application's jar to the container
-ADD ${JAR_FILE} app.jar
+# Grant execution permissions to the Gradle Wrapper
+RUN chmod +x ./gradlew
 
-# Run the jar file 
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Copy the source code
+COPY src /app/src
+
+# Build the application
+RUN ./gradlew build -x test
+
+# Stage 2: Create the runtime image
+FROM amazoncorretto:21
+
+# Copy the built jar file from the build stage
+COPY --from=build /app/build/libs/*.jar app.jar
+
+# Run the jar file
+ENTRYPOINT ["java", "-jar", "/app.jar"]
