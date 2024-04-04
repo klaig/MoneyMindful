@@ -11,8 +11,11 @@ WORKDIR /app
 COPY build.gradle.kts settings.gradle.kts gradlew gradlew.bat /app/
 COPY gradle /app/gradle
 
-# Grant execution permissions to the Gradle Wrapper
-RUN chmod +x ./gradlew
+# Convert line endings and grant execution permissions to the Gradle Wrapper
+RUN sed -i 's/\r$//' ./gradlew && chmod +x ./gradlew
+
+# Copy Checkstyle configuration
+COPY google_checks.xml /app/
 
 # Copy the source code
 COPY src /app/src
