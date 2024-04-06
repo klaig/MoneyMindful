@@ -1,10 +1,15 @@
 package io.github.kevinlaig.backend.service;
 
 import io.github.kevinlaig.backend.dto.SignupDTO;
+import io.github.kevinlaig.backend.dto.UpdateUserDTO;
 import io.github.kevinlaig.backend.mapper.UserMapper;
+import io.github.kevinlaig.backend.model.Role;
+import io.github.kevinlaig.backend.model.Roles;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +42,17 @@ public class UserService {
    * @return the created user
    */
   public User createUser(SignupDTO signupDTO) {
+    // Validates the new user data
     validateNewUserData(signupDTO);
+
+    // Maps the DTO to an entity and encodes the password
     User user = userMapper.toEntity(signupDTO);
     user.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
+
+    // Sets the user role to USER for every new user
+    Role userRole = new Role(Roles.USER);
+    user.setRole(userRole);
+
     return userRepository.save(user);
   }
 
@@ -60,29 +73,70 @@ public class UserService {
     });
   }
 
+  /**
+   * Get a user by ID.
+   *
+   * @param id User ID
+   * @return the user
+   */
+  @PreAuthorize("hasRole('ADMIN')")
   public Optional<User> getUserById(Long id) {
-    // Retrieve a user by ID
     return userRepository.findById(id);
   }
 
+  /**
+   * Get a user by username.
+   *
+   * @param username Username
+   * @return the user
+   */
+  @PreAuthorize("#username == authentication.principal.username")
   public Optional<User> getUserByUsername(String username) {
-    // Retrieve a user by username
     return userRepository.findByUsername(username);
   }
 
+  /**
+   * Get all users.
+   *
+   * @return list of users
+   */
+  @PreAuthorize("hasRole('ADMIN')")
   public List<User> getAllUsers() {
-    // Retrieve all users
     return userRepository.findAll();
   }
 
-  public User updateUser(User user) {
-    // Update a user's details
-    // Ensure the user exists and handle changes appropriately
-    return userRepository.save(user);
+  /**
+   * Update a user.
+   *
+   * @param updateUserDTO DTO containing user details
+   * @return the updated user
+   */
+  @PreAuthorize("#updateUserDTO.username == authentication.principal.username")
+  public User updateUser(UpdateUserDTO updateUserDTO) {
+    return userRepository.findByUsername(updateUserDTO.getUsername())
+      .map(user -> {
+        if (updateUserDTO.getEmail() != null) {
+          user.setEmail(updateUserDTO.getEmail());
+        }
+        if (updateUserDTO.getFullName() != null) {
+          user.setFullName(updateUserDTO.getFullName());
+        }
+        if (updateUserDTO.getPassword() != null) {
+          user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
+        }
+
+        return userRepository.save(user);
+      })
+      .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + updateUserDTO.getUsername()));
   }
 
+  /**
+   * Delete a user by ID.
+   *
+   * @param id User ID
+   */
+  @PreAuthorize("hasRole('ADMIN')")
   public void deleteUser(Long id) {
-    // Delete a user by ID
     userRepository.deleteById(id);
   }
 }

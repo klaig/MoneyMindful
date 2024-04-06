@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
@@ -31,7 +30,11 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-
+    /**
+     * Logout endpoint.
+     *
+     * @return Logout response
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         SecurityContextHolder.clearContext(); // Clear the security context
