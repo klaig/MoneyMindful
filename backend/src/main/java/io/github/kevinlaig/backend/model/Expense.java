@@ -2,7 +2,7 @@ package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -31,9 +31,9 @@ public class Expense {
     @Min(value = 0, message = "Amount must be greater than 0")
     private BigDecimal amount;
 
-    @Column(nullable = false)
-    @NotEmpty(message = "Category is required")
-    private String category; // This could be an enum or a separate entity
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(nullable = false)
     private LocalDateTime dateTime;
