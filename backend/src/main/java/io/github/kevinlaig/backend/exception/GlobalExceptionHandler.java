@@ -1,12 +1,14 @@
 package io.github.kevinlaig.backend.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Global exception handler.
@@ -15,12 +17,11 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-    List<String> errors = new ArrayList<>();
-    ex.getBindingResult().getAllErrors().forEach(error -> {
-      String errorMessage = error.getDefaultMessage();
-      errors.add(errorMessage);
-    });
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    Map<String, String> errors = new HashMap<>();
+    ex.getBindingResult().getFieldErrors().forEach(error ->
+      errors.put(error.getField(), error.getDefaultMessage()));
     return ResponseEntity.badRequest().body(errors);
   }
 }
