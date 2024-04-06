@@ -23,25 +23,48 @@ public class ExpenseService {
     this.expenseRepository = expenseRepository;
   }
 
-  // Create an Expense
+  /**
+   * Create an Expense.
+   *
+   * @param expense Expense
+   * @return Created Expense
+   */
   @PreAuthorize("#expense.user.username == authentication.principal.username")
   public Expense createExpense(Expense expense) {
     return expenseRepository.save(expense);
   }
 
-  // Get all Expenses for the authenticated user
+  /**
+   * Get all Expenses for a User.
+   *
+   * @param user User
+   * @return List of Expenses
+   */
   @PreAuthorize("#user.username == authentication.principal.username")
   public List<Expense> findAllUserExpenses(User user) {
     return expenseRepository.findByUser(user);
   }
 
-  // Get an Expense by ID
+  /**
+   * Find an Expense by ID and User.
+   *
+   * @param id   Long
+   * @param user User
+   * @return Optional of Expense
+   */
   @PreAuthorize("#user.username == authentication.principal.username")
   public Optional<Expense> findExpenseByIdAndUser(Long id, User user) {
     return expenseRepository.findByIdAndUser(id, user);
   }
 
-  // Update an Expense
+  /**
+   * Update an Expense.
+   *
+   * @param id             Long
+   * @param expenseDetails Expense
+   * @param user           User
+   * @return Optional of Expense
+   */
   @PreAuthorize("#user.username == authentication.principal.username")
   public Optional<Expense> updateExpense(Long id, Expense expenseDetails, User user) {
     Optional<Expense> existingExpense = expenseRepository.findByIdAndUser(id, user);
@@ -56,7 +79,13 @@ public class ExpenseService {
     return Optional.empty();
   }
 
-  // Delete an Expense
+  /**
+   * Delete an Expense.
+   *
+   * @param id   Long
+   * @param user User
+   * @return boolean
+   */
   @PreAuthorize("#user.username == authentication.principal.username")
   public boolean deleteExpense(Long id, User user) {
     Optional<Expense> existingExpense = expenseRepository.findByIdAndUser(id, user);
