@@ -1,7 +1,7 @@
 package io.github.kevinlaig.backend.controller;
 
-import io.github.kevinlaig.backend.dto.SignupDTO;
-import io.github.kevinlaig.backend.dto.UpdateUserDTO;
+import io.github.kevinlaig.backend.dto.SignupDto;
+import io.github.kevinlaig.backend.dto.UpdateUserDto;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.service.UserService;
 import jakarta.validation.Valid;
@@ -35,7 +35,7 @@ public class UserController {
    * @return Created user
    */
   @PostMapping("/user/signup")
-  public ResponseEntity<User> createUser(@RequestBody @Valid SignupDTO signupDTO) {
+  public ResponseEntity<User> createUser(@RequestBody @Valid SignupDto signupDTO) {
     User user = userService.createUser(signupDTO);
     return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
@@ -88,7 +88,7 @@ public class UserController {
    * @return Response entity
    */
   @PutMapping("/user/profile")
-  public ResponseEntity<?> updateUser(@RequestBody @Valid UpdateUserDTO updateUserDTO, Principal principal) {
+  public ResponseEntity<?> updateUser(@RequestBody @Valid UpdateUserDto updateUserDTO, Principal principal) {
     String username = principal.getName();
     if (!username.equals(updateUserDTO.getUsername())) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
