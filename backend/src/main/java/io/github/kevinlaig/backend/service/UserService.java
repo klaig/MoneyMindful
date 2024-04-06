@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -111,20 +112,14 @@ public class UserService {
    * @param updateUserDTO DTO containing user details
    * @return the updated user
    */
+  @Transactional
   @PreAuthorize("#updateUserDTO.username == authentication.principal.username")
   public User updateUser(UpdateUserDto updateUserDTO) {
     return userRepository.findByUsername(updateUserDTO.getUsername())
       .map(user -> {
-        if (updateUserDTO.getEmail() != null) {
-          user.setEmail(updateUserDTO.getEmail());
-        }
-        if (updateUserDTO.getFullName() != null) {
-          user.setFullName(updateUserDTO.getFullName());
-        }
-        if (updateUserDTO.getPassword() != null) {
-          user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
-        }
-
+        user.setEmail(updateUserDTO.getEmail());
+        user.setFullName(updateUserDTO.getFullName());
+        user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
         return userRepository.save(user);
       })
       .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + updateUserDTO.getUsername()));
@@ -136,7 +131,12 @@ public class UserService {
    * @param id User ID
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public void deleteUser(Long id) {
-    userRepository.deleteById(id);
+  public boolean deleteUser(Long id) {
+    return userRepository.findById(id)
+      .map(user -> {
+        userRepository.deleteById(id);
+        return true;
+      })
+      .orElse(false);
   }
 }

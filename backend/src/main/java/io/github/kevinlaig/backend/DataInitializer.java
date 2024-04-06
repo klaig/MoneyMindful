@@ -1,9 +1,7 @@
 package io.github.kevinlaig.backend;
 
-import io.github.kevinlaig.backend.model.Expense;
-import io.github.kevinlaig.backend.model.Role;
-import io.github.kevinlaig.backend.model.Roles;
-import io.github.kevinlaig.backend.model.User;
+import io.github.kevinlaig.backend.model.*;
+import io.github.kevinlaig.backend.repository.CategoryRepository;
 import io.github.kevinlaig.backend.repository.ExpenseRepository;
 import io.github.kevinlaig.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +20,13 @@ import java.time.LocalDateTime;
 @Profile("!test") // Exclude this runner in test profile
 public class DataInitializer implements CommandLineRunner {
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private ExpenseRepository expenseRepository;
+
+    private CategoryRepository categoryRepository;
 
     @Override
     public void run(String... args) {
@@ -59,11 +56,17 @@ public class DataInitializer implements CommandLineRunner {
 
             userRepository.save(normalUser);
         }
-        if (expenseRepository.findByUser(userRepository.findByUsername("kevin").get()).isEmpty()) {
-            // Create expenses
-            User user = userRepository.findByUsername("kevin").get();
+        User user = userRepository.findByUsername("kevin").orElse(null);
+        if (user != null && expenseRepository.findByUser(user).isEmpty()) {
+            // Create a category
+            Category foodCategory = new Category();
+            foodCategory.setName("Food");
+            foodCategory.setUser(user);
+            categoryRepository.save(foodCategory);
+
+            // Create an expense with the category
             expenseRepository.save(new Expense(
-              null, user, new BigDecimal("10.0"), "Lunch", LocalDateTime.now(), "Food"));
+              null, user, new BigDecimal("10.0"), foodCategory, LocalDateTime.now(), "Lunch"));
         }
         if (userRepository.findByUsername("lisa").isEmpty()) {
             // Create user
