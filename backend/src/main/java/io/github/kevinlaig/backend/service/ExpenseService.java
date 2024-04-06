@@ -1,11 +1,14 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
+import io.github.kevinlaig.backend.repository.CategoryRepository;
 import io.github.kevinlaig.backend.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +21,12 @@ public class ExpenseService {
 
   private final ExpenseRepository expenseRepository;
 
+  private final CategoryRepository categoryRepository;
+
   @Autowired
-  public ExpenseService(ExpenseRepository expenseRepository) {
+  public ExpenseService(ExpenseRepository expenseRepository, CategoryRepository categoryRepository) {
     this.expenseRepository = expenseRepository;
+    this.categoryRepository = categoryRepository;
   }
 
   /**
@@ -60,23 +66,21 @@ public class ExpenseService {
   /**
    * Update an Expense.
    *
-   * @param id             Long
-   * @param expenseDetails Expense
-   * @param user           User
+   * @param id            Long
+   * @param expenseDetails UpdateExpenseDto
+   * @param user          User
    * @return Optional of Expense
    */
+  @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
-  public Optional<Expense> updateExpense(Long id, Expense expenseDetails, User user) {
-    Optional<Expense> existingExpense = expenseRepository.findByIdAndUser(id, user);
-    if (existingExpense.isPresent()) {
-      Expense updatedExpense = existingExpense.get();
-      updatedExpense.setAmount(expenseDetails.getAmount());
-      updatedExpense.setCategory(expenseDetails.getCategory());
-      updatedExpense.setDateTime(expenseDetails.getDateTime());
-      updatedExpense.setNotes(expenseDetails.getNotes());
-      return Optional.of(expenseRepository.save(updatedExpense));
-    }
-    return Optional.empty();
+  public Optional<Expense> updateExpense(Long id, UpdateExpenseDto expenseDetails, User user) {
+    return expenseRepository.findByIdAndUser(id, user).map(expense -> {
+      categoryRepository.findById(expenseDetails.getCategoryId()).ifPresent(expense::setCategory);
+      expense.setAmount(expenseDetails.getAmount());
+      expense.setDateTime(expenseDetails.getDateTime());
+      expense.setNotes(expenseDetails.getNotes());
+      return expenseRepository.save(expense);
+    });
   }
 
   /**

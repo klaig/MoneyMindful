@@ -1,5 +1,6 @@
 package io.github.kevinlaig.backend.controller;
 
+import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.UserRepository;
@@ -73,7 +74,7 @@ public class ExpenseController {
 
   // Update an Expense
   @PutMapping("/{id}")
-  public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expenseDetails, Principal principal) {
+  public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody UpdateExpenseDto expenseDetails, Principal principal) {
     String username = principal.getName();
     User user = userRepository.findByUsername(username)
       .orElseThrow(() -> new UsernameNotFoundException("User not found"));
