@@ -1,7 +1,7 @@
 package io.github.kevinlaig.backend.service;
 
-import io.github.kevinlaig.backend.dto.SignupDTO;
-import io.github.kevinlaig.backend.dto.UpdateUserDTO;
+import io.github.kevinlaig.backend.dto.SignupDto;
+import io.github.kevinlaig.backend.dto.UpdateUserDto;
 import io.github.kevinlaig.backend.mapper.UserMapper;
 import io.github.kevinlaig.backend.model.Role;
 import io.github.kevinlaig.backend.model.Roles;
@@ -41,7 +41,7 @@ public class UserService {
    * @param signupDTO DTO containing user details
    * @return the created user
    */
-  public User createUser(SignupDTO signupDTO) {
+  public User createUser(SignupDto signupDTO) {
     // Validates the new user data
     validateNewUserData(signupDTO);
 
@@ -61,7 +61,7 @@ public class UserService {
    *
    * @param signupDTO DTO containing user details
    */
-  private void validateNewUserData(SignupDTO signupDTO) {
+  private void validateNewUserData(SignupDto signupDTO) {
     if (signupDTO.getUsername() == null || signupDTO.getUsername().trim().isEmpty()) {
       throw new IllegalArgumentException("Username cannot be null or empty");
     }
@@ -112,7 +112,7 @@ public class UserService {
    * @return the updated user
    */
   @PreAuthorize("#updateUserDTO.username == authentication.principal.username")
-  public User updateUser(UpdateUserDTO updateUserDTO) {
+  public User updateUser(UpdateUserDto updateUserDTO) {
     return userRepository.findByUsername(updateUserDTO.getUsername())
       .map(user -> {
         if (updateUserDTO.getEmail() != null) {

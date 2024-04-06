@@ -1,6 +1,6 @@
 package io.github.kevinlaig.backend.service;
 
-import io.github.kevinlaig.backend.dto.SignupDTO;
+import io.github.kevinlaig.backend.dto.SignupDto;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.UserRepository;
 import io.github.kevinlaig.backend.mapper.UserMapper;
@@ -32,12 +32,12 @@ class UserServiceTest {
   @InjectMocks
   private UserService userService;
 
-  private SignupDTO signupDTO;
+  private SignupDto signupDTO;
   private User user;
 
   @BeforeEach
   void setUp() {
-    signupDTO = new SignupDTO();
+    signupDTO = new SignupDto();
     signupDTO.setUsername("testUser");
     signupDTO.setPassword("password123");
 

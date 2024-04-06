@@ -29,7 +29,7 @@ public class SecurityConfigTest {
     @Test
     @WithMockUser
     public void shouldGiveForbiddenIfNoToken() throws Exception {
-        mockMvc.perform(get("/api/admin/secure-endpoint"))
+        mockMvc.perform(get("/api/admin/users"))
                 .andExpect(status().isForbidden());
     }
 
@@ -38,7 +38,7 @@ public class SecurityConfigTest {
     public void shouldGiveOkIfValidTokenForAdmin() throws Exception {
         String token = jwtUtil.generateToken("testAdmin");
 
-        mockMvc.perform(get("/api/admin/secure-endpoint")
+        mockMvc.perform(get("/api/admin/users")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
     }

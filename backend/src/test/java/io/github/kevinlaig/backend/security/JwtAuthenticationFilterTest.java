@@ -30,14 +30,14 @@ public class JwtAuthenticationFilterTest {
     public void shouldAllowAccessWithValidToken() throws Exception {
         String token = jwtUtil.generateToken("testAdmin");
 
-        mockMvc.perform(get("/api/admin/secure-endpoint")
+        mockMvc.perform(get("/api/admin/users")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void shouldDenyAccessWithInvalidToken() throws Exception {
-        mockMvc.perform(get("/api/admin/secure-endpoint")
+        mockMvc.perform(get("/api/admin/users")
                         .header("Authorization", "Bearer " + "invalidtoken"))
                 .andExpect(status().isForbidden());
     }

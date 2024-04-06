@@ -32,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
     private ExpenseRepository expenseRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (userRepository.findByUsername("admin").isEmpty()) {
             // Create admin
             Role adminRole = new Role(Roles.ADMIN);
@@ -62,7 +62,8 @@ public class DataInitializer implements CommandLineRunner {
         if (expenseRepository.findByUser(userRepository.findByUsername("kevin").get()).isEmpty()) {
             // Create expenses
             User user = userRepository.findByUsername("kevin").get();
-            expenseRepository.save(new Expense(null, user, new BigDecimal("10.0"), "Lunch", LocalDateTime.now(), "Food"));
+            expenseRepository.save(new Expense(
+              null, user, new BigDecimal("10.0"), "Lunch", LocalDateTime.now(), "Food"));
         }
         if (userRepository.findByUsername("lisa").isEmpty()) {
             // Create user
