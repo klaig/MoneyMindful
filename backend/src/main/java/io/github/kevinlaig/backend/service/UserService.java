@@ -42,6 +42,7 @@ public class UserService {
    * @param signupDTO DTO containing user details
    * @return the created user
    */
+  @Transactional
   public User createUser(SignupDto signupDTO) {
     // Validates the new user data
     validateNewUserData(signupDTO);
@@ -81,7 +82,7 @@ public class UserService {
    * @return the user
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public Optional<User> getUserById(Long id) {
+  public Optional<User> findUserById(Long id) {
     return userRepository.findById(id);
   }
 
@@ -92,7 +93,7 @@ public class UserService {
    * @return the user
    */
   @PreAuthorize("#username == authentication.principal.username")
-  public Optional<User> getUserByUsername(String username) {
+  public Optional<User> findUserByUsername(String username) {
     return userRepository.findByUsername(username);
   }
 
@@ -130,6 +131,7 @@ public class UserService {
    *
    * @param id User ID
    */
+  @Transactional
   @PreAuthorize("hasRole('ADMIN')")
   public boolean deleteUser(Long id) {
     return userRepository.findById(id)

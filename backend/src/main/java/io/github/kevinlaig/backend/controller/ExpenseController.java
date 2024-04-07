@@ -53,7 +53,7 @@ public class ExpenseController {
     Optional<User> userOptional = userRepository.findByUsername(principal.getName());
     if (userOptional.isPresent()) {
       User user = userOptional.get();
-      List<Expense> expenses = expenseService.findAllUserExpenses(user);
+      List<Expense> expenses = expenseService.getAllUserExpenses(user);
       return ResponseEntity.ok(expenses);
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);

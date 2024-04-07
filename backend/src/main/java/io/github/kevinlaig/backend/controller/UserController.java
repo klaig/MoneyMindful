@@ -48,7 +48,7 @@ public class UserController {
    */
   @GetMapping("/admin/user/{id}")
   public ResponseEntity<User> getUserById(@PathVariable Long id) {
-    Optional<User> user = userService.getUserById(id);
+    Optional<User> user = userService.findUserById(id);
     return user
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
@@ -63,7 +63,7 @@ public class UserController {
   @GetMapping("/user/profile")
   public ResponseEntity<?> getUserByUsername(Principal principal) {
     String username = principal.getName();
-    Optional<User> user = userService.getUserByUsername(username);
+    Optional<User> user = userService.findUserByUsername(username);
     return user
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());

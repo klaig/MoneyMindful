@@ -9,6 +9,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * DTO for updating an expense.
+ */
 @Getter
 @Setter
 public class UpdateExpenseDto {
