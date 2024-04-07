@@ -17,16 +17,27 @@ import java.time.LocalDateTime;
  * Data initializer for the application.
  */
 @Component
-@Profile("!test") // Exclude this runner in test profile
+@Profile("!test")
 public class DataInitializer implements CommandLineRunner {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    private ExpenseRepository expenseRepository;
+    private final ExpenseRepository expenseRepository;
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public DataInitializer(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           ExpenseRepository expenseRepository,
+                           CategoryRepository categoryRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.expenseRepository = expenseRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public void run(String... args) {
