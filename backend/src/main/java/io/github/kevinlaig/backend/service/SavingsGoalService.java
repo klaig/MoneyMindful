@@ -32,6 +32,7 @@ public class SavingsGoalService {
    * @param user        User
    * @return SavingsGoal
    */
+  @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
   public SavingsGoal createSavingsGoal(SavingsGoal savingsGoal, User user) {
     savingsGoal.setUser(user);
@@ -45,8 +46,20 @@ public class SavingsGoalService {
    * @return List of SavingsGoals
    */
   @PreAuthorize("#user.username == authentication.principal.username")
-  public List<SavingsGoal> findAllUserSavingsGoals(User user) {
+  public List<SavingsGoal> getAllUserSavingsGoals(User user) {
     return savingsGoalRepository.findByUser(user);
+  }
+
+  /**
+   * Get a savings goal by ID.
+   *
+   * @param id   Long
+   * @param user User
+   * @return Optional of SavingsGoal
+   */
+  @PreAuthorize("#user.username == authentication.principal.username")
+  public Optional<SavingsGoal> findSavingsGoal(Long id, User user) {
+    return savingsGoalRepository.findByIdAndUser(id, user);
   }
 
   /**
@@ -76,6 +89,7 @@ public class SavingsGoalService {
    * @param user User
    * @return boolean
    */
+  @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
   public boolean deleteSavingsGoal(Long id, User user) {
     Optional<SavingsGoal> existingSavingsGoal = savingsGoalRepository.findByIdAndUser(id, user);

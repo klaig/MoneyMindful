@@ -35,6 +35,7 @@ public class ExpenseService {
    * @param expense Expense
    * @return Created Expense
    */
+  @Transactional
   @PreAuthorize("#expense.user.username == authentication.principal.username")
   public Expense createExpense(Expense expense) {
     return expenseRepository.save(expense);
@@ -47,7 +48,7 @@ public class ExpenseService {
    * @return List of Expenses
    */
   @PreAuthorize("#user.username == authentication.principal.username")
-  public List<Expense> findAllUserExpenses(User user) {
+  public List<Expense> getAllUserExpenses(User user) {
     return expenseRepository.findByUser(user);
   }
 
@@ -90,6 +91,7 @@ public class ExpenseService {
    * @param user User
    * @return boolean
    */
+  @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
   public boolean deleteExpense(Long id, User user) {
     Optional<Expense> existingExpense = expenseRepository.findByIdAndUser(id, user);
