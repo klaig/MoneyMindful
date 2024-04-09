@@ -25,4 +25,15 @@ public class Category {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    /**
+     * Constructor for creating a category without specifying an ID.
+     *
+     * @param user The user that the category belongs to.
+     * @param name The name of the category.
+     */
+    public Category(User user, String name) {
+        this.user = user;
+        this.name = name;
+    }
 }

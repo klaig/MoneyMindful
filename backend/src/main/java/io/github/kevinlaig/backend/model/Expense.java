@@ -41,4 +41,20 @@ public class Expense {
     @Column(length = 500)
     private String notes;
 
+    /**
+     * Constructor for creating an expense without specifying an ID.
+     *
+     * @param user The user that the expense belongs to.
+     * @param amount The amount of the expense.
+     * @param category The category of the expense.
+     * @param dateTime The date and time of the expense.
+     * @param notes The notes of the expense.
+     */
+    public Expense(User user, BigDecimal amount, Category category, LocalDateTime dateTime, String notes) {
+        this.user = user;
+        this.amount = amount;
+        this.category = category;
+        this.dateTime = dateTime;
+        this.notes = notes;
+    }
 }
