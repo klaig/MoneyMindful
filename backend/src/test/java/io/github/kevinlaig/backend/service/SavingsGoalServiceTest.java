@@ -41,7 +41,7 @@ class SavingsGoalServiceTest {
   }
 
   @Test
-  void whenCreateSavingsGoal_thenSaveSavingsGoal() {
+  void createSavingsGoal_ValidSavingsGoal_ReturnsSavingsGoal() {
     when(savingsGoalRepository.save(any(SavingsGoal.class))).thenReturn(savingsGoal);
 
     SavingsGoal created = savingsGoalService.createSavingsGoal(savingsGoal, user);
@@ -52,7 +52,7 @@ class SavingsGoalServiceTest {
   }
 
   @Test
-  void whenGetAllUserSavingsGoals_thenReturnList() {
+  void getAllUserSavingsGoals_ValidUser_ReturnsList() {
     List<SavingsGoal> goals = Collections.singletonList(savingsGoal);
     when(savingsGoalRepository.findByUser(user)).thenReturn(goals);
 
@@ -64,7 +64,7 @@ class SavingsGoalServiceTest {
   }
 
   @Test
-  void whenFindSavingsGoal_thenReturnSavingsGoal() {
+  void findSavingsGoal_ValidUser_ReturnsSavingsGoal() {
     when(savingsGoalRepository.findByIdAndUser(1L, user)).thenReturn(Optional.of(savingsGoal));
 
     Optional<SavingsGoal> found = savingsGoalService.findSavingsGoal(1L, user);
@@ -75,8 +75,8 @@ class SavingsGoalServiceTest {
   }
 
   @Test
-  void whenUpdateSavingsGoal_thenReturnUpdatedSavingsGoal() {
-    UpdateSavingsGoalDto updateDTO = new UpdateSavingsGoalDto(); // Mock DTO
+  void updateSavingsGoal_ValidSavingsGoal_ReturnsUpdatedSavingsGoal() {
+    UpdateSavingsGoalDto updateDTO = new UpdateSavingsGoalDto();
     when(savingsGoalRepository.findByIdAndUser(1L, user)).thenReturn(Optional.of(savingsGoal));
     when(savingsGoalRepository.save(any(SavingsGoal.class))).thenReturn(savingsGoal);
 
@@ -87,7 +87,7 @@ class SavingsGoalServiceTest {
   }
 
   @Test
-  void whenDeleteSavingsGoal_thenReturnTrue() {
+  void deleteSavingsGoal_ValidIdAndUser_DeletesAndReturnsTrue() {
     when(savingsGoalRepository.findByIdAndUser(1L, user)).thenReturn(Optional.of(savingsGoal));
     doNothing().when(savingsGoalRepository).deleteById(1L);
 
@@ -96,7 +96,7 @@ class SavingsGoalServiceTest {
   }
 
   @Test
-  void whenDeleteNonExistingSavingsGoal_thenReturnFalse() {
+  void deleteSavingsGoal_InvalidIdAndUser_ReturnsFalse() {
     when(savingsGoalRepository.findByIdAndUser(1L, user)).thenReturn(Optional.empty());
 
     assertFalse(savingsGoalService.deleteSavingsGoal(1L, user));
