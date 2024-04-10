@@ -1,10 +1,12 @@
 package io.github.kevinlaig.backend.controller;
 
+import io.github.kevinlaig.backend.dto.CreateExpenseDto;
 import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.UserRepository;
 import io.github.kevinlaig.backend.service.ExpenseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +36,18 @@ public class ExpenseController {
   /**
    * Create an Expense
    *
-   * @param expense Expense
+   * @param createExpenseDto CreateExpenseDto
+   * @param principal        Principal
    * @return Created Expense
    */
   @PostMapping
-  public ResponseEntity<Expense> createExpense(Expense expense) {
-    return ResponseEntity.ok(expenseService.createExpense(expense));
+  public ResponseEntity<Expense> createExpense(@RequestBody @Valid CreateExpenseDto createExpenseDto, Principal principal) {
+    User user = userRepository.findByUsername(principal.getName())
+      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    Expense createdExpense = expenseService.createExpense(createExpenseDto, user);
+    return ResponseEntity.ok(createdExpense);
   }
+
 
   /**
    * Get all Expenses for the authenticated user
@@ -74,7 +81,7 @@ public class ExpenseController {
 
   // Update an Expense
   @PutMapping("/{id}")
-  public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody UpdateExpenseDto expenseDetails, Principal principal) {
+  public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody @Valid UpdateExpenseDto expenseDetails, Principal principal) {
     String username = principal.getName();
     User user = userRepository.findByUsername(username)
       .orElseThrow(() -> new UsernameNotFoundException("User not found"));

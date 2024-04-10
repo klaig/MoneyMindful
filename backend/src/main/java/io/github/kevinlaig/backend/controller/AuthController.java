@@ -3,6 +3,7 @@ package io.github.kevinlaig.backend.controller;
 import io.github.kevinlaig.backend.dto.JwtResponse;
 import io.github.kevinlaig.backend.dto.LoginRequest;
 import io.github.kevinlaig.backend.security.JwtUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,7 +49,7 @@ public class AuthController {
      * @return JWT response
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),

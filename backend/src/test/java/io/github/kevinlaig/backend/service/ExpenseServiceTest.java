@@ -1,5 +1,7 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateExpenseDto;
+import io.github.kevinlaig.backend.mapper.ExpenseMapper;
 import io.github.kevinlaig.backend.model.Category;
 import io.github.kevinlaig.backend.model.Role;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,30 +36,42 @@ public class ExpenseServiceTest {
   @Mock
   private CategoryRepository categoryRepository;
 
+  @Mock
+  private ExpenseMapper expenseMapper;
+
   @InjectMocks
   private ExpenseService expenseService;
 
   private User testUser;
   private Expense testExpense;
   private UpdateExpenseDto updateExpenseDto;
+  private CreateExpenseDto createExpenseDto;
 
   @BeforeEach
   void setUp() {
     testUser = new User("test@example.com", "testUser", "password", "Test User", new Role());
     Category testCategory = new Category(testUser, "Test Category");
     testExpense = new Expense(testUser, BigDecimal.valueOf(100.00), testCategory, LocalDateTime.now(), "Test notes");
+
     updateExpenseDto = new UpdateExpenseDto();
     updateExpenseDto.setAmount(BigDecimal.valueOf(200.00));
     updateExpenseDto.setCategoryId(2L);
     updateExpenseDto.setDateTime(LocalDateTime.now());
     updateExpenseDto.setNotes("Updated notes");
+
+    createExpenseDto = new CreateExpenseDto();
+    createExpenseDto.setAmount(BigDecimal.valueOf(100.00));
+    createExpenseDto.setCategoryId(1L);
+    createExpenseDto.setDateTime(LocalDateTime.now());
+    createExpenseDto.setNotes("creation test notes");
   }
 
   @Test
   void createExpense_ValidExpense_ReturnsExpense() {
     when(expenseRepository.save(any(Expense.class))).thenReturn(testExpense);
+    when(expenseMapper.toEntity(createExpenseDto)).thenReturn(testExpense);
 
-    Expense result = expenseService.createExpense(testExpense);
+    Expense result = expenseService.createExpense(createExpenseDto, testUser);
 
     assertNotNull(result);
     assertEquals(testExpense, result);

@@ -1,6 +1,8 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateExpenseDto;
 import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
+import io.github.kevinlaig.backend.mapper.ExpenseMapper;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.CategoryRepository;
@@ -23,23 +25,32 @@ public class ExpenseService {
 
   private final CategoryRepository categoryRepository;
 
+  private final ExpenseMapper expenseMapper;
+
   @Autowired
-  public ExpenseService(ExpenseRepository expenseRepository, CategoryRepository categoryRepository) {
+  public ExpenseService(ExpenseRepository expenseRepository, CategoryRepository categoryRepository, ExpenseMapper expenseMapper) {
     this.expenseRepository = expenseRepository;
     this.categoryRepository = categoryRepository;
+    this.expenseMapper = expenseMapper;
   }
 
   /**
    * Create an Expense.
    *
-   * @param expense Expense
-   * @return Created Expense
+   * @param createExpenseDto CreateExpenseDto
+   * @param user             User
+   * @return Expense
    */
   @Transactional
-  @PreAuthorize("#expense.user.username == authentication.principal.username")
-  public Expense createExpense(Expense expense) {
+  @PreAuthorize("#user.username == authentication.principal.username")
+  public Expense createExpense(CreateExpenseDto createExpenseDto, User user) {
+    Expense expense = expenseMapper.toEntity(createExpenseDto);
+
+    expense.setUser(user);
+
     return expenseRepository.save(expense);
   }
+
 
   /**
    * Get all Expenses for a User.
