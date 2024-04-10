@@ -1,17 +1,20 @@
 package io.github.kevinlaig.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
+/**
+ * BudgetLimit entity.
+ */
 @Entity
 @Table(name = "budget_limits")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"budget"}) // Preventing recursion
+@ToString(exclude = {"budget"})
 public class BudgetLimit {
 
   @Id

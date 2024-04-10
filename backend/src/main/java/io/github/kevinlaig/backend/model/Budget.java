@@ -3,9 +3,7 @@ package io.github.kevinlaig.backend.model;
 import jakarta.persistence.*;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Budget entity.
@@ -15,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"budgetLimits"}) // Preventing recursion
+@ToString(exclude = {"budgetLimits"})
 public class Budget {
 
     @Id
