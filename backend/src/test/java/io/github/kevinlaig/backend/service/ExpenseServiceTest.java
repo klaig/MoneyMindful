@@ -69,12 +69,14 @@ public class ExpenseServiceTest {
   @Test
   void createExpense_ValidExpense_ReturnsExpense() {
     when(expenseRepository.save(any(Expense.class))).thenReturn(testExpense);
-    when(expenseMapper.toEntity(createExpenseDto)).thenReturn(testExpense);
+    when(expenseMapper.toEntity(any(CreateExpenseDto.class))).thenReturn(testExpense);
 
     Expense result = expenseService.createExpense(createExpenseDto, testUser);
 
     assertNotNull(result);
     assertEquals(testExpense, result);
+    verify(expenseMapper).toEntity(any(CreateExpenseDto.class));
+    verify(expenseRepository).save(any(Expense.class));
   }
 
   @Test

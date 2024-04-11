@@ -58,7 +58,7 @@ class UserServiceTest {
   void createUser_WhenUserDoesNotExist_ShouldCreateUserWithUserRole() {
     when(userRepository.findByUsername(signupDTO.getUsername())).thenReturn(Optional.empty());
     when(passwordEncoder.encode(signupDTO.getPassword())).thenReturn(user.getPassword());
-    when(userMapper.toEntity(signupDTO)).thenReturn(user);
+    when(userMapper.toEntity(any(SignupDto.class))).thenReturn(user);
     when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
     User createdUser = userService.createUser(signupDTO);
@@ -69,6 +69,7 @@ class UserServiceTest {
     assertNotNull(createdUser.getRole());
     assertEquals(Roles.USER, createdUser.getRole().getName());
     verify(userRepository).save(any(User.class));
+    verify(userMapper).toEntity(any(SignupDto.class));
   }
 
   @Test

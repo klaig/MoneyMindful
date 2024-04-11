@@ -1,6 +1,9 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateBudgetDto;
+import io.github.kevinlaig.backend.dto.CreateBudgetLimitDto;
 import io.github.kevinlaig.backend.dto.UpdateBudgetDto;
+import io.github.kevinlaig.backend.mapper.BudgetMapper;
 import io.github.kevinlaig.backend.model.Budget;
 import io.github.kevinlaig.backend.model.BudgetLimit;
 import io.github.kevinlaig.backend.model.Category;
@@ -31,11 +34,15 @@ public class BudgetServiceTest {
   @Mock
   private CategoryRepository categoryRepository;
 
+  @Mock
+  private BudgetMapper budgetMapper;
+
   @InjectMocks
   private BudgetService budgetService;
 
   private User testUser;
   private Budget testBudget;
+  private CreateBudgetDto createBudgetDto;
 
   @BeforeEach
   void setUp() {
@@ -43,16 +50,25 @@ public class BudgetServiceTest {
     testBudget = new Budget();
     testBudget.setUser(testUser);
     testBudget.setBudgetLimits(new HashSet<>());
+
+    createBudgetDto = new CreateBudgetDto();
+    Set<CreateBudgetLimitDto> budgetLimitDtos = new HashSet<>();
+    CreateBudgetLimitDto budgetLimitDto = new CreateBudgetLimitDto();
+    budgetLimitDtos.add(budgetLimitDto);
+    createBudgetDto.setBudgetLimits(budgetLimitDtos);
   }
 
   @Test
   void createBudget_ValidBudget_ReturnsBudget() {
     when(budgetRepository.save(any(Budget.class))).thenReturn(testBudget);
+    when(budgetMapper.toEntity(any(CreateBudgetDto.class))).thenReturn(testBudget);
 
-    Budget result = budgetService.createBudget(testBudget, testUser);
+    Budget result = budgetService.createBudget(createBudgetDto, testUser);
 
     assertNotNull(result);
     assertEquals(testBudget, result);
+    verify(budgetMapper).toEntity(any(CreateBudgetDto.class));
+    verify(budgetRepository).save(any(Budget.class));
   }
 
   @Test

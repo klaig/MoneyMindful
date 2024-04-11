@@ -53,13 +53,14 @@ class SavingsGoalServiceTest {
   @Test
   void createSavingsGoal_ValidSavingsGoal_ReturnsSavingsGoal() {
     when(savingsGoalRepository.save(any(SavingsGoal.class))).thenReturn(savingsGoal);
-    when(savingsGoalMapper.toEntity(createSavingsGoalDto)).thenReturn(savingsGoal);
+    when(savingsGoalMapper.toEntity(any(CreateSavingsGoalDto.class))).thenReturn(savingsGoal);
 
     SavingsGoal created = savingsGoalService.createSavingsGoal(createSavingsGoalDto, user);
 
     assertNotNull(created);
     assertEquals(user, created.getUser());
     verify(savingsGoalRepository).save(savingsGoal);
+    verify(savingsGoalMapper).toEntity(any(CreateSavingsGoalDto.class));
   }
 
   @Test

@@ -49,12 +49,14 @@ public class CategoryServiceTest {
   @Test
   void createCategory_SuccessfulCreation_ReturnsCategory() {
     when(categoryRepository.save(any(Category.class))).thenReturn(testCategory);
-    when(categoryMapper.toEntity(createCategoryDto)).thenReturn(testCategory);
+    when(categoryMapper.toEntity(any(CreateCategoryDto.class))).thenReturn(testCategory);
 
     Category result = categoryService.createCategory(createCategoryDto, testUser);
 
     assertNotNull(result);
     assertEquals(testCategory, result);
+    verify(categoryMapper).toEntity(any(CreateCategoryDto.class));
+    verify(categoryRepository).save(any(Category.class));
   }
 
   @Test

@@ -1,6 +1,9 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateBudgetLimitDto;
 import io.github.kevinlaig.backend.dto.UpdateBudgetLimitDto;
+import io.github.kevinlaig.backend.mapper.BudgetLimitMapper;
+import io.github.kevinlaig.backend.model.Budget;
 import io.github.kevinlaig.backend.model.BudgetLimit;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.BudgetLimitRepository;
@@ -20,23 +23,27 @@ public class BudgetLimitService {
 
   private final BudgetLimitRepository budgetLimitRepository;
   private final CategoryRepository categoryRepository;
+  private final BudgetLimitMapper budgetLimitMapper;
 
   @Autowired
-  public BudgetLimitService(BudgetLimitRepository budgetLimitRepository, CategoryRepository categoryRepository) {
+  public BudgetLimitService(BudgetLimitRepository budgetLimitRepository, CategoryRepository categoryRepository, BudgetLimitMapper budgetLimitMapper) {
     this.budgetLimitRepository = budgetLimitRepository;
     this.categoryRepository = categoryRepository;
+    this.budgetLimitMapper = budgetLimitMapper;
   }
 
   /**
    * Create a BudgetLimit.
    *
-   * @param budgetLimit BudgetLimit
-   * @param user        User
-   * @return Created BudgetLimit
+   * @param createBudgetLimitDto CreateBudgetLimitDto
+   * @param budget               Budget
+   * @return the created BudgetLimit
    */
   @Transactional
-  @PreAuthorize("#user.username == authentication.principal.username")
-  public BudgetLimit createBudgetLimit(BudgetLimit budgetLimit, User user) {
+  @PreAuthorize("#budget.user.username == authentication.principal.username")
+  public BudgetLimit createBudgetLimit(CreateBudgetLimitDto createBudgetLimitDto, Budget budget) {
+    BudgetLimit budgetLimit = budgetLimitMapper.toEntity(createBudgetLimitDto);
+    budgetLimit.setBudget(budget); // Set the associated budget
     return budgetLimitRepository.save(budgetLimit);
   }
 

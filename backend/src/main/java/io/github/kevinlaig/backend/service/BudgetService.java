@@ -1,6 +1,8 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateBudgetDto;
 import io.github.kevinlaig.backend.dto.UpdateBudgetDto;
+import io.github.kevinlaig.backend.mapper.BudgetMapper;
 import io.github.kevinlaig.backend.model.Budget;
 import io.github.kevinlaig.backend.model.BudgetLimit;
 import io.github.kevinlaig.backend.model.User;
@@ -24,23 +26,28 @@ public class BudgetService {
 
   private final BudgetRepository budgetRepository;
   private final CategoryRepository categoryRepository;
+  private final BudgetMapper budgetMapper;
 
   @Autowired
-  public BudgetService(BudgetRepository budgetRepository, CategoryRepository categoryRepository) {
+  public BudgetService(BudgetRepository budgetRepository, CategoryRepository categoryRepository, BudgetMapper budgetMapper) {
     this.budgetRepository = budgetRepository;
     this.categoryRepository = categoryRepository;
+    this.budgetMapper = budgetMapper;
   }
 
   /**
    * Create a budget.
    *
-   * @param budget Budget
-   * @param user   User
+   * @param createBudgetDto CreateBudgetDto
+   * @param user            User
    * @return the created budget
    */
   @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
-  public Budget createBudget(Budget budget, User user) {
+  public Budget createBudget(CreateBudgetDto createBudgetDto, User user) {
+    Budget budget = budgetMapper.toEntity(createBudgetDto);
+    budget.setUser(user);
+    budget.getBudgetLimits().forEach(limit -> limit.setBudget(budget));
     return budgetRepository.save(budget);
   }
 
