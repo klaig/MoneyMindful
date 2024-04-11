@@ -5,6 +5,9 @@ import io.github.kevinlaig.backend.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Mapper for category-related operations.
+ */
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
