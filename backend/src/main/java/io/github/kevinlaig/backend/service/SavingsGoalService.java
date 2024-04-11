@@ -1,6 +1,8 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateSavingsGoalDto;
 import io.github.kevinlaig.backend.dto.UpdateSavingsGoalDto;
+import io.github.kevinlaig.backend.mapper.SavingsGoalMapper;
 import io.github.kevinlaig.backend.model.SavingsGoal;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.SavingsGoalRepository;
@@ -20,21 +22,19 @@ public class SavingsGoalService {
 
   private final SavingsGoalRepository savingsGoalRepository;
 
+  private final SavingsGoalMapper savingsGoalMapper;
+
   @Autowired
-  public SavingsGoalService(SavingsGoalRepository savingsGoalRepository) {
+  public SavingsGoalService(SavingsGoalRepository savingsGoalRepository, SavingsGoalMapper savingsGoalMapper) {
     this.savingsGoalRepository = savingsGoalRepository;
+    this.savingsGoalMapper = savingsGoalMapper;
   }
 
-  /**
-   * Create a new savings goal.
-   *
-   * @param savingsGoal SavingsGoal
-   * @param user        User
-   * @return SavingsGoal
-   */
+
   @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
-  public SavingsGoal createSavingsGoal(SavingsGoal savingsGoal, User user) {
+  public SavingsGoal createSavingsGoal(CreateSavingsGoalDto createSavingsGoalDto, User user) {
+    SavingsGoal savingsGoal = savingsGoalMapper.toEntity(createSavingsGoalDto);
     savingsGoal.setUser(user);
     return savingsGoalRepository.save(savingsGoal);
   }

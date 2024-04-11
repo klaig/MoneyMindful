@@ -1,6 +1,8 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateSavingsGoalDto;
 import io.github.kevinlaig.backend.dto.UpdateSavingsGoalDto;
+import io.github.kevinlaig.backend.mapper.SavingsGoalMapper;
 import io.github.kevinlaig.backend.model.SavingsGoal;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.SavingsGoalRepository;
@@ -10,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +31,13 @@ class SavingsGoalServiceTest {
   @Mock
   private SavingsGoalRepository savingsGoalRepository;
 
+  @Mock
+  private SavingsGoalMapper savingsGoalMapper;
+
   @InjectMocks
   private SavingsGoalService savingsGoalService;
 
+  private CreateSavingsGoalDto createSavingsGoalDto;
   private SavingsGoal savingsGoal;
   private User user;
 
@@ -38,13 +47,17 @@ class SavingsGoalServiceTest {
     savingsGoal = new SavingsGoal();
     user.setUsername("testUser");
     savingsGoal.setUser(user);
+
+    createSavingsGoalDto = new CreateSavingsGoalDto();
+    createSavingsGoalDto.setName("Test Savings Goal");
   }
 
   @Test
   void createSavingsGoal_ValidSavingsGoal_ReturnsSavingsGoal() {
     when(savingsGoalRepository.save(any(SavingsGoal.class))).thenReturn(savingsGoal);
+    when(savingsGoalMapper.toEntity(createSavingsGoalDto)).thenReturn(savingsGoal);
 
-    SavingsGoal created = savingsGoalService.createSavingsGoal(savingsGoal, user);
+    SavingsGoal created = savingsGoalService.createSavingsGoal(createSavingsGoalDto, user);
 
     assertNotNull(created);
     assertEquals(user, created.getUser());
