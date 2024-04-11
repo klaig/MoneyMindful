@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+/**
+ * DTO for updating a budget limit.
+ */
 @Getter
 @Setter
 public class UpdateBudgetLimitDto {
