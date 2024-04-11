@@ -1,6 +1,8 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateCategoryDto;
 import io.github.kevinlaig.backend.dto.UpdateCategoryDto;
+import io.github.kevinlaig.backend.mapper.CategoryMapper;
 import io.github.kevinlaig.backend.model.Category;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.CategoryRepository;
@@ -25,23 +27,31 @@ public class CategoryServiceTest {
   @Mock
   private CategoryRepository categoryRepository;
 
+  @Mock
+  private CategoryMapper categoryMapper;
+
   @InjectMocks
   private CategoryService categoryService;
 
   private User testUser;
   private Category testCategory;
+  private CreateCategoryDto createCategoryDto;
 
   @BeforeEach
   void setUp() {
     testUser = new User("test@example.com", "testUser", "password", "Test User", null);
     testCategory = new Category(testUser, "TestCategory");
+    createCategoryDto = new CreateCategoryDto();
+    createCategoryDto.setName("TestCategory");
+
   }
 
   @Test
   void createCategory_SuccessfulCreation_ReturnsCategory() {
     when(categoryRepository.save(any(Category.class))).thenReturn(testCategory);
+    when(categoryMapper.toEntity(createCategoryDto)).thenReturn(testCategory);
 
-    Category result = categoryService.createCategory(testCategory, testUser);
+    Category result = categoryService.createCategory(createCategoryDto, testUser);
 
     assertNotNull(result);
     assertEquals(testCategory, result);

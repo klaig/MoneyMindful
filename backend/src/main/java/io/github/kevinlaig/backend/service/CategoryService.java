@@ -1,6 +1,8 @@
 package io.github.kevinlaig.backend.service;
 
+import io.github.kevinlaig.backend.dto.CreateCategoryDto;
 import io.github.kevinlaig.backend.dto.UpdateCategoryDto;
+import io.github.kevinlaig.backend.mapper.CategoryMapper;
 import io.github.kevinlaig.backend.model.Category;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.CategoryRepository;
@@ -20,21 +22,26 @@ public class CategoryService {
 
   private final CategoryRepository categoryRepository;
 
+  private final CategoryMapper categoryMapper;
+
   @Autowired
-  public CategoryService(CategoryRepository categoryRepository) {
+  public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
     this.categoryRepository = categoryRepository;
+    this.categoryMapper = categoryMapper;
   }
 
   /**
    * Create a category.
    *
-   * @param category Category
-   * @param user     User
+   * @param createCategoryDto CreateCategoryDto
+   * @param user              User
    * @return the created category
    */
   @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
-  public Category createCategory(Category category, User user) {
+  public Category createCategory(CreateCategoryDto createCategoryDto, User user) {
+    Category category = categoryMapper.toEntity(createCategoryDto);
+    category.setUser(user);
     return categoryRepository.save(category);
   }
 

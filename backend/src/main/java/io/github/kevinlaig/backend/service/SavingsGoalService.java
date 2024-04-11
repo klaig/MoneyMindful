@@ -30,7 +30,13 @@ public class SavingsGoalService {
     this.savingsGoalMapper = savingsGoalMapper;
   }
 
-
+  /**
+   * Create a savings goal.
+   *
+   * @param createSavingsGoalDto CreateSavingsGoalDto
+   * @param user                User
+   * @return the created savings goal
+   */
   @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
   public SavingsGoal createSavingsGoal(CreateSavingsGoalDto createSavingsGoalDto, User user) {

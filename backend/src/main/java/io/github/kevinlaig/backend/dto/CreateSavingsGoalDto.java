@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * CreateSavingsGoalDto.
+ * DTO for creating a savingsGoal.
  */
 @Getter
 @Setter

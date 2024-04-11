@@ -18,7 +18,7 @@ public abstract class ExpenseMapper {
   private CategoryRepository categoryRepository;
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "user", ignore = true)
+  @Mapping(target = "user", ignore = true)  // User is set in the service layer
   @Mapping(target = "category", expression = "java(mapCategory(createExpenseDto.getCategoryId()))")
   public abstract Expense toEntity(CreateExpenseDto createExpenseDto);
 
