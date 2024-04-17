@@ -76,6 +76,20 @@ public class UserControllerTest {
   }
 
   @Test
+  void getUserByUsername_WithValidUsername_ReturnsUser() throws Exception {
+    User foundUser = new User(1L, "user@example.com", "validUser", "password", "User Fullname", null);
+    Principal mockPrincipal = mock(Principal.class);
+    when(mockPrincipal.getName()).thenReturn("validUser");
+    when(userService.findUserByUsername("validUser")).thenReturn(Optional.of(foundUser));
+
+    mockMvc.perform(get("/api/user/profile")
+        .principal(mockPrincipal))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.username").value("validUser"))
+      .andExpect(jsonPath("$.fullName").value("User Fullname"));
+  }
+
+  @Test
   void getAllUsers_WhenRequested_ReturnsAllUsers() throws Exception {
     User user1 = new User(1L, "user1@example.com", "user1", "password", "User One", null);
     User user2 = new User(2L, "user2@example.com", "user2", "password", "User Two", null);
