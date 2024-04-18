@@ -107,15 +107,16 @@ public class ExpenseControllerTest {
   void updateExpense_ExistingExpense_UpdatesAndReturnsUpdatedExpense() throws Exception {
     Long expenseId = 1L;
 
-    doAnswer(invocation -> {
-      UpdateExpenseDto dto = invocation.getArgument(1);
-      expense.setAmount(dto.getAmount());
-      expense.setNotes(dto.getNotes());
-      expense.setDateTime(dto.getDateTime());
-      return Optional.of(expense);
-    }).when(expenseService).updateExpense(anyLong(), any(UpdateExpenseDto.class), any(User.class));
+    Expense updatedExpense = new Expense();
+    updatedExpense.setId(expenseId);
+    updatedExpense.setUser(user);
+    updatedExpense.setAmount(updateExpenseDto.getAmount());
+    updatedExpense.setNotes(updateExpenseDto.getNotes());
+    updatedExpense.setDateTime(updateExpenseDto.getDateTime());
 
     when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
+    when(expenseService.updateExpense(eq(expenseId), any(UpdateExpenseDto.class), eq(user)))
+      .thenReturn(Optional.of(updatedExpense));
 
     mockMvc.perform(put("/api/user/expenses/{id}", expenseId)
         .contentType(MediaType.APPLICATION_JSON)
@@ -125,6 +126,7 @@ public class ExpenseControllerTest {
       .andExpect(jsonPath("$.amount").value(120.00))
       .andExpect(jsonPath("$.notes").value("Updated lunch"));
   }
+
 
   @Test
   void deleteExpense_ExistingId_DeletesExpense() throws Exception {
