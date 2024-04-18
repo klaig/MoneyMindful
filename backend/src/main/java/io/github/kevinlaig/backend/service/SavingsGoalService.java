@@ -64,7 +64,7 @@ public class SavingsGoalService {
    * @return Optional of SavingsGoal
    */
   @PreAuthorize("#user.username == authentication.principal.username")
-  public Optional<SavingsGoal> findSavingsGoal(Long id, User user) {
+  public Optional<SavingsGoal> findSavingsGoalById(Long id, User user) {
     return savingsGoalRepository.findByIdAndUser(id, user);
   }
 

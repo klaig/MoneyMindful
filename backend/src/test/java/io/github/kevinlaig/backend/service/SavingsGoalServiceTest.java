@@ -79,7 +79,7 @@ class SavingsGoalServiceTest {
   void findSavingsGoal_ValidUser_ReturnsSavingsGoal() {
     when(savingsGoalRepository.findByIdAndUser(1L, user)).thenReturn(Optional.of(savingsGoal));
 
-    Optional<SavingsGoal> found = savingsGoalService.findSavingsGoal(1L, user);
+    Optional<SavingsGoal> found = savingsGoalService.findSavingsGoalById(1L, user);
 
     assertTrue(found.isPresent());
     assertEquals(savingsGoal, found.get());

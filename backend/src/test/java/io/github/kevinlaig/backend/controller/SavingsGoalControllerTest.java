@@ -75,7 +75,7 @@ public class SavingsGoalControllerTest {
 
   @Test
   void getSavingsGoalById_ExistingId_ReturnsGoal() throws Exception {
-    when(savingsGoalService.findSavingsGoal(1L, user)).thenReturn(Optional.of(savingsGoal));
+    when(savingsGoalService.findSavingsGoalById(1L, user)).thenReturn(Optional.of(savingsGoal));
 
     mockMvc.perform(get("/api/user/savingsgoals/{id}", 1)
         .principal(() -> "testUser"))
