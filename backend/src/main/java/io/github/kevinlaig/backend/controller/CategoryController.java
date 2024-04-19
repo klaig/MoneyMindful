@@ -32,6 +32,13 @@ public class CategoryController {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Create a new category.
+   *
+   * @param createCategoryDto DTO containing category data
+   * @param principal         authenticated user
+   * @return created category
+   */
   @PostMapping
   public ResponseEntity<Category> createCategory(@RequestBody @Valid CreateCategoryDto createCategoryDto, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -40,6 +47,12 @@ public class CategoryController {
     return ResponseEntity.ok(createdCategory);
   }
 
+  /**
+   * Get all categories for the authenticated user.
+   *
+   * @param principal authenticated user
+   * @return list of categories
+   */
   @GetMapping
   public ResponseEntity<List<Category>> getAllUserCategories(Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -48,6 +61,13 @@ public class CategoryController {
     return ResponseEntity.ok(categories);
   }
 
+  /**
+   * Get a category by ID.
+   *
+   * @param id        category ID
+   * @param principal authenticated user
+   * @return category
+   */
   @GetMapping("/{id}")
   public ResponseEntity<Category> getCategoryById(@PathVariable Long id, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -57,6 +77,14 @@ public class CategoryController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  /**
+   * Update a category.
+   *
+   * @param id        category ID
+   * @param updateDto DTO containing updated category data
+   * @param principal authenticated user
+   * @return updated category
+   */
   @PutMapping("/{id}")
   public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody @Valid UpdateCategoryDto updateDto, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -66,6 +94,13 @@ public class CategoryController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  /**
+   * Delete a category.
+   *
+   * @param id        category ID
+   * @param principal authenticated user
+   * @return 200 OK if successful, 404 Not Found if category not found
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteCategory(@PathVariable Long id, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
