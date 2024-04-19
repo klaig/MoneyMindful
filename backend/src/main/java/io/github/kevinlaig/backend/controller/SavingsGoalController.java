@@ -32,6 +32,13 @@ public class SavingsGoalController {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Create a new savings goal.
+   *
+   * @param createSavingsGoalDto CreateSavingsGoalDto
+   * @param principal            Principal
+   * @return Created savings goal
+   */
   @PostMapping
   public ResponseEntity<SavingsGoal> createSavingsGoal(@RequestBody @Valid CreateSavingsGoalDto createSavingsGoalDto, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -40,6 +47,12 @@ public class SavingsGoalController {
     return ResponseEntity.ok(createdSavingsGoal);
   }
 
+  /**
+   * Get all savings goals for the authenticated user.
+   *
+   * @param principal Principal
+   * @return List of savings goals
+   */
   @GetMapping
   public ResponseEntity<List<SavingsGoal>> getAllUserSavingsGoals(Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -48,6 +61,13 @@ public class SavingsGoalController {
     return ResponseEntity.ok(savingsGoals);
   }
 
+  /**
+   * Get a savings goal by ID.
+   *
+   * @param id        Savings goal ID
+   * @param principal Principal
+   * @return Response entity
+   */
   @GetMapping("/{id}")
   public ResponseEntity<SavingsGoal> getSavingsGoalById(@PathVariable Long id, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -57,6 +77,14 @@ public class SavingsGoalController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  /**
+   * Update a savings goal.
+   *
+   * @param id                   Savings goal ID
+   * @param updateSavingsGoalDto UpdateSavingsGoalDto
+   * @param principal            Principal
+   * @return Updated savings goal
+   */
   @PutMapping("/{id}")
   public ResponseEntity<SavingsGoal> updateSavingsGoal(@PathVariable Long id, @RequestBody @Valid UpdateSavingsGoalDto updateSavingsGoalDto, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
@@ -66,6 +94,13 @@ public class SavingsGoalController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  /**
+   * Delete a savings goal.
+   *
+   * @param id        Savings goal ID
+   * @param principal Principal
+   * @return Response entity
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteSavingsGoal(@PathVariable Long id, Principal principal) {
     User user = userRepository.findByUsername(principal.getName())
