@@ -67,7 +67,13 @@ public class ExpenseController {
     }
   }
 
-  // Get an Expense by ID
+  /**
+   * Get an Expense by ID
+   *
+   * @param id        Expense ID
+   * @param principal Principal
+   * @return Expense
+   */
   @GetMapping("/{id}")
   public ResponseEntity<Expense> getExpenseByIdAndUser(@PathVariable Long id, Principal principal) {
     String username = principal.getName();
@@ -79,7 +85,14 @@ public class ExpenseController {
                   .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  // Update an Expense
+  /**
+   * Update an Expense
+   *
+   * @param id            Expense ID
+   * @param expenseDetails UpdateExpenseDto
+   * @param principal      Principal
+   * @return Updated Expense
+   */
   @PutMapping("/{id}")
   public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody @Valid UpdateExpenseDto expenseDetails, Principal principal) {
     String username = principal.getName();
@@ -91,7 +104,13 @@ public class ExpenseController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  // Delete an Expense
+  /**
+   * Delete an Expense
+   *
+   * @param id        Expense ID
+   * @param principal Principal
+   * @return ResponseEntity
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteExpense(@PathVariable Long id, Principal principal) {
     String username = principal.getName();
