@@ -9,6 +9,8 @@ import io.github.kevinlaig.backend.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -80,7 +82,26 @@ class UserServiceTest {
     verify(userRepository, never()).save(any(User.class));
   }
 
+  @ParameterizedTest
+  @ValueSource(strings = {"", " ", "  "})
+  void createUser_WhenUsernameIsInvalid_ShouldThrowException(String invalidUsername) {
+    SignupDto signupDto = new SignupDto();
+    signupDto.setUsername(invalidUsername);
+    signupDto.setPassword("validPassword123");
+    signupDto.setEmail("user@example.com");
 
+    assertThrows(IllegalArgumentException.class, () -> userService.createUser(signupDto));
+  }
+
+  @Test
+  void createUser_WhenDatabaseErrorOccurs_ShouldHandleException() {
+    when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+    when(userMapper.toEntity(any(SignupDto.class))).thenReturn(user);
+    when(passwordEncoder.encode(anyString())).thenReturn("encryptedPassword123");
+    when(userRepository.save(any(User.class))).thenThrow(new RuntimeException("Database error"));
+
+    assertThrows(RuntimeException.class, () -> userService.createUser(signupDTO));
+  }
 
   @Test
   void findUserById_WhenUserExists_ShouldReturnUser() {
