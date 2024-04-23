@@ -94,6 +94,16 @@ class UserServiceTest {
   }
 
   @Test
+  void createUser_WhenDatabaseErrorOccurs_ShouldHandleException() {
+    when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+    when(userMapper.toEntity(any(SignupDto.class))).thenReturn(user);
+    when(passwordEncoder.encode(anyString())).thenReturn("encryptedPassword123");
+    when(userRepository.save(any(User.class))).thenThrow(new RuntimeException("Database error"));
+
+    assertThrows(RuntimeException.class, () -> userService.createUser(signupDTO));
+  }
+
+  @Test
   void findUserById_WhenUserExists_ShouldReturnUser() {
     Long userId = 1L;
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
