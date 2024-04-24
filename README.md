@@ -1,4 +1,4 @@
-# MoneyMindful goals
+ # MoneyMindful goals
 
 ## Overview
 MoneyMindful is a comprehensive personal finance management application designed to help users track expenses, set budgets, monitor savings, and analyze spending patterns. This platform offers an intuitive way for users to gain control over their finances and make informed financial decisions.
@@ -30,8 +30,8 @@ MoneyMindful is a comprehensive personal finance management application designed
 - Seamless navigation using React Router.
 
 ### RESTful API
-- Backend API development using Spring Boot. +++
-- CRUD operations for user data, expenses, budgets, etc. +++
+- Backend API development using Spring Boot.
+- CRUD operations for user data, expenses, budgets, etc.
 
 ### Database Integration
 - MySQL for data storage.
