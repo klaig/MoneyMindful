@@ -30,8 +30,8 @@ MoneyMindful is a comprehensive personal finance management application designed
 - Seamless navigation using React Router.
 
 ### RESTful API
-- Backend API development using Spring Boot.
-- CRUD operations for user data, expenses, budgets, etc.
+- Backend API development using Spring Boot. +++
+- CRUD operations for user data, expenses, budgets, etc. +++
 
 ### Database Integration
 - MySQL for data storage.
