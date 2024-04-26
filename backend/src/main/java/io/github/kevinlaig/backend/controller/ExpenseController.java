@@ -3,7 +3,6 @@ package io.github.kevinlaig.backend.controller;
 import io.github.kevinlaig.backend.dto.CreateExpenseDto;
 import io.github.kevinlaig.backend.dto.ExpenseDto;
 import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
-import io.github.kevinlaig.backend.mapper.ExpenseMapper;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
 import io.github.kevinlaig.backend.repository.UserRepository;

@@ -1,6 +1,7 @@
 package io.github.kevinlaig.backend.service;
 
 import io.github.kevinlaig.backend.dto.CreateExpenseDto;
+import io.github.kevinlaig.backend.dto.ExpenseDto;
 import io.github.kevinlaig.backend.mapper.ExpenseMapper;
 import io.github.kevinlaig.backend.model.Category;
 import io.github.kevinlaig.backend.model.Role;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,13 +84,21 @@ public class ExpenseServiceTest {
 
   @Test
   void getAllUserExpenses_ValidUser_ReturnsExpensesList() {
-    when(expenseRepository.findByUser(testUser)).thenReturn(Collections.singletonList(testExpense));
+    ExpenseDto expectedDto = new ExpenseDto();
+    expectedDto.setAmount(testExpense.getAmount());
+    expectedDto.setCategoryName(testExpense.getCategory().getName());
+    expectedDto.setDateTime(testExpense.getDateTime());
+    expectedDto.setNotes(testExpense.getNotes());
 
-    List<Expense> result = expenseService.getAllUserExpenses(testUser);
+    when(expenseRepository.findByUser(testUser)).thenReturn(Collections.singletonList(testExpense));
+    when(expenseMapper.toDto(testExpense)).thenReturn(expectedDto);
+
+    List<ExpenseDto> result = expenseService.getAllUserExpenses(testUser);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(testExpense, result.getFirst());
+    assertEquals(1, result.size());
+    assertEquals(expectedDto.getAmount(), result.getFirst().getAmount());
   }
 
   @Test
@@ -95,19 +106,26 @@ public class ExpenseServiceTest {
     User existingUser = new User("existing@example.com", "existingUser", "password", "Existing User", new Role());
     when(expenseRepository.findByUser(existingUser)).thenReturn(Collections.emptyList());
 
-    List<Expense> result = expenseService.getAllUserExpenses(existingUser);
+    List<ExpenseDto> result = expenseService.getAllUserExpenses(existingUser);
 
     assertTrue(result.isEmpty());
   }
 
   @Test
   void findExpenseByIdAndUser_ValidIdAndUser_ReturnsExpense() {
-    when(expenseRepository.findByIdAndUser(1L, testUser)).thenReturn(Optional.of(testExpense));
+    ExpenseDto expectedDto = new ExpenseDto();
+    expectedDto.setAmount(testExpense.getAmount());
+    expectedDto.setCategoryName(testExpense.getCategory().getName());
+    expectedDto.setDateTime(testExpense.getDateTime());
+    expectedDto.setNotes(testExpense.getNotes());
 
-    Optional<Expense> result = expenseService.findExpenseByIdAndUser(1L, testUser);
+    when(expenseRepository.findByIdAndUser(1L, testUser)).thenReturn(Optional.of(testExpense));
+    when(expenseMapper.toDto(testExpense)).thenReturn(expectedDto);
+
+    Optional<ExpenseDto> result = expenseService.findExpenseByIdAndUser(1L, testUser);
 
     assertTrue(result.isPresent());
-    assertEquals(testExpense, result.get());
+    assertEquals(expectedDto.getAmount(), result.get().getAmount());
   }
 
   @Test

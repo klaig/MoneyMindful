@@ -2,7 +2,9 @@ package io.github.kevinlaig.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kevinlaig.backend.dto.CreateExpenseDto;
+import io.github.kevinlaig.backend.dto.ExpenseDto;
 import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
+import io.github.kevinlaig.backend.mapper.ExpenseMapper;
 import io.github.kevinlaig.backend.model.Category;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
@@ -35,6 +37,9 @@ public class ExpenseControllerTest {
 
   @Mock
   private UserRepository userRepository;
+
+  @Mock
+  private ExpenseMapper expenseMapper;
 
   @InjectMocks
   private ExpenseController expenseController;
@@ -82,8 +87,14 @@ public class ExpenseControllerTest {
 
   @Test
   void getAllUserExpenses_ReturnsExpensesList() throws Exception {
+    ExpenseDto expenseDto = new ExpenseDto();
+    expenseDto.setAmount(BigDecimal.valueOf(100.00));
+    expenseDto.setCategoryName("Food");
+    expenseDto.setDateTime(LocalDateTime.now());
+    expenseDto.setNotes("Lunch");
+
     when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
-    when(expenseService.getAllUserExpenses(user)).thenReturn(Collections.singletonList(expense));
+    when(expenseService.getAllUserExpenses(user)).thenReturn(Collections.singletonList(expenseDto));
 
     mockMvc.perform(get("/api/user/expenses")
         .principal(() -> "testUser"))
@@ -91,18 +102,24 @@ public class ExpenseControllerTest {
       .andExpect(jsonPath("$[0].notes").value("Lunch"));
   }
 
+
   @Test
   void getExpenseByIdAndUser_ExistingId_ReturnsExpense() throws Exception {
     Long expenseId = 1L;
+    ExpenseDto expenseDto = new ExpenseDto();
+    expenseDto.setAmount(expense.getAmount());
+    expenseDto.setCategoryName(expense.getCategory().getName());
+    expenseDto.setDateTime(expense.getDateTime());
+    expenseDto.setNotes(expense.getNotes());
+
     when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
-    when(expenseService.findExpenseByIdAndUser(expenseId, user)).thenReturn(Optional.of(expense));
+    when(expenseService.findExpenseByIdAndUser(expenseId, user)).thenReturn(Optional.of(expenseDto));
 
     mockMvc.perform(get("/api/user/expenses/{id}", expenseId)
         .principal(() -> "testUser"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.notes").value("Lunch"));
   }
-
   @Test
   void updateExpense_ExistingExpense_UpdatesAndReturnsUpdatedExpense() throws Exception {
     Long expenseId = 1L;
