@@ -3,7 +3,7 @@ import {Box, CssBaseline, Toolbar} from '@mui/material';
 import TopBar from './TopBar';
 import Sidebar from './Sidebar';
 
-const drawerWidth = 240;
+const drawerWidth = 40;
 
 const Layout = ({ children }) => {
     return (
@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
             <CssBaseline />
             <TopBar />
             <Sidebar />
-            <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`, width: `calc(100% - ${drawerWidth}px)` }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px`, mr: `${drawerWidth}px`, width: `calc(100% - ${drawerWidth * 2}px)` }}>
                 <Toolbar />
                 {children}
             </Box>
