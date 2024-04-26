@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kevinlaig.backend.dto.CreateExpenseDto;
 import io.github.kevinlaig.backend.dto.ExpenseDto;
 import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
-import io.github.kevinlaig.backend.mapper.ExpenseMapper;
 import io.github.kevinlaig.backend.model.Category;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
@@ -37,9 +36,6 @@ public class ExpenseControllerTest {
 
   @Mock
   private UserRepository userRepository;
-
-  @Mock
-  private ExpenseMapper expenseMapper;
 
   @InjectMocks
   private ExpenseController expenseController;

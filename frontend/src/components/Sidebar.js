@@ -31,7 +31,7 @@ const Sidebar = () => {
             </Toolbar>
             <Box sx={{ overflow: 'auto' }}>
                 <List>
-                    <ListItemButton onClick={() => navigate('/dashboard')} key="Home">
+                    <ListItemButton onClick={() => navigate('/')} key="Home">
                         <ListItemIcon>
                             <Home />
                         </ListItemIcon>
@@ -48,24 +48,6 @@ const Sidebar = () => {
                             <TrendingUp />
                         </ListItemIcon>
                         <ListItemText primary="Expenses" />
-                    </ListItemButton>
-                    <ListItemButton onClick={() => navigate('/expenses')} key="Expenses">
-                        <ListItemIcon>
-                            <TrendingUp />
-                        </ListItemIcon>
-                        <ListItemText primary="test" />
-                    </ListItemButton>
-                    <ListItemButton onClick={() => navigate('/expenses')} key="Expenses">
-                        <ListItemIcon>
-                            <TrendingUp />
-                        </ListItemIcon>
-                        <ListItemText primary="test2" />
-                    </ListItemButton>
-                    <ListItemButton onClick={() => navigate('/expenses')} key="Expenses">
-                        <ListItemIcon>
-                            <TrendingUp />
-                        </ListItemIcon>
-                        <ListItemText primary="test3" />
                     </ListItemButton>
                     <ListItemButton key="Settings">
                         <ListItemIcon>

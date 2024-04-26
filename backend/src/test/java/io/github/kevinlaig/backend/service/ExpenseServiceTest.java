@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
