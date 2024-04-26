@@ -28,13 +28,11 @@ public class ExpenseController {
 
   private final ExpenseService expenseService;
   private final UserRepository userRepository;
-  private final ExpenseMapper expenseMapper;
 
   @Autowired
-  public ExpenseController(ExpenseService expenseService, UserRepository userRepository, ExpenseMapper expenseMapper) {
+  public ExpenseController(ExpenseService expenseService, UserRepository userRepository) {
     this.expenseService = expenseService;
     this.userRepository = userRepository;
-    this.expenseMapper = expenseMapper;
   }
 
   /**
