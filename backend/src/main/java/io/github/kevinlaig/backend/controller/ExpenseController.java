@@ -1,6 +1,7 @@
 package io.github.kevinlaig.backend.controller;
 
 import io.github.kevinlaig.backend.dto.CreateExpenseDto;
+import io.github.kevinlaig.backend.dto.ExpenseDto;
 import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.model.User;
@@ -56,11 +57,11 @@ public class ExpenseController {
    * @return List of Expenses
    */
   @GetMapping
-  public ResponseEntity<List<Expense>> getAllUserExpenses(Principal principal) {
+  public ResponseEntity<List<ExpenseDto>> getAllUserExpenses(Principal principal) {
     Optional<User> userOptional = userRepository.findByUsername(principal.getName());
     if (userOptional.isPresent()) {
       User user = userOptional.get();
-      List<Expense> expenses = expenseService.getAllUserExpenses(user);
+      List<ExpenseDto> expenses = expenseService.getAllUserExpenses(user);
       return ResponseEntity.ok(expenses);
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
@@ -75,12 +76,12 @@ public class ExpenseController {
    * @return Expense
    */
   @GetMapping("/{id}")
-  public ResponseEntity<Expense> getExpenseByIdAndUser(@PathVariable Long id, Principal principal) {
+  public ResponseEntity<ExpenseDto> getExpenseByIdAndUser(@PathVariable Long id, Principal principal) {
     String username = principal.getName();
     User user = userRepository.findByUsername(username)
                               .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    Optional<Expense> expense = expenseService.findExpenseByIdAndUser(id, user);
+    Optional<ExpenseDto> expense = expenseService.findExpenseByIdAndUser(id, user);
     return expense.map(ResponseEntity::ok)
                   .orElseGet(() -> ResponseEntity.notFound().build());
   }

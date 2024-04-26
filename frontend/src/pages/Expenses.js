@@ -42,7 +42,7 @@ const Expenses = () => {
                     <TableBody>
                         {expenses.map((expense) => (
                             <TableRow key={expense.id}>
-                                <TableCell>{expense.category}</TableCell>
+                                <TableCell>{expense.categoryName}</TableCell>
                                 <TableCell align="right">{expense.amount.toFixed(2)}</TableCell>
                                 <TableCell>{expense.notes}</TableCell>
                                 <TableCell>{formatDate(expense.dateTime)}</TableCell>
