@@ -1,6 +1,7 @@
 package io.github.kevinlaig.backend.service;
 
 import io.github.kevinlaig.backend.dto.CreateExpenseDto;
+import io.github.kevinlaig.backend.dto.ExpenseDto;
 import io.github.kevinlaig.backend.dto.UpdateExpenseDto;
 import io.github.kevinlaig.backend.mapper.ExpenseMapper;
 import io.github.kevinlaig.backend.model.Expense;
@@ -12,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,8 +62,10 @@ public class ExpenseService {
    * @return List of Expenses
    */
   @PreAuthorize("#user.username == authentication.principal.username")
-  public List<Expense> getAllUserExpenses(User user) {
-    return expenseRepository.findByUser(user);
+  public List<ExpenseDto> getAllUserExpenses(User user) {
+    ArrayList<ExpenseDto> expenses = new ArrayList<>();
+    expenseRepository.findByUser(user).forEach(expense -> expenses.add(expenseMapper.toDto(expense)));
+    return expenses;
   }
 
   /**
@@ -71,8 +76,8 @@ public class ExpenseService {
    * @return Optional of Expense
    */
   @PreAuthorize("#user.username == authentication.principal.username")
-  public Optional<Expense> findExpenseByIdAndUser(Long id, User user) {
-    return expenseRepository.findByIdAndUser(id, user);
+  public Optional<ExpenseDto> findExpenseByIdAndUser(Long id, User user) {
+    return expenseRepository.findByIdAndUser(id, user).map(expenseMapper::toDto);
   }
 
   /**

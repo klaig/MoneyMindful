@@ -1,6 +1,7 @@
 package io.github.kevinlaig.backend.mapper;
 
 import io.github.kevinlaig.backend.dto.CreateExpenseDto;
+import io.github.kevinlaig.backend.dto.ExpenseDto;
 import io.github.kevinlaig.backend.model.Category;
 import io.github.kevinlaig.backend.model.Expense;
 import io.github.kevinlaig.backend.repository.CategoryRepository;
@@ -25,5 +26,8 @@ public abstract class ExpenseMapper {
   protected Category mapCategory(Long categoryId) {
     return categoryId == null ? null : categoryRepository.findById(categoryId).orElse(null);
   }
+
+  @Mapping(source = "category.name", target = "categoryName")
+  public abstract ExpenseDto toDto(Expense expense);
 
 }
