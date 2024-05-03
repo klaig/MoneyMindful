@@ -61,14 +61,18 @@ const Expenses = () => {
         setEditableExpenseId(tempExpense.id);
         setTempExpense({
             ...tempExpense,
-            dateTime: tempExpense.dateTime ? parseISO(tempExpense.dateTime) : new Date() // Ensure it's a Date object
+            dateTime: tempExpense.dateTime ? parseISO(tempExpense.dateTime) : new Date(), // Ensure it's a Date object
+            categoryId: 1 // Hardcoding categoryId temporarily
         });
         handleMenuClose();
     };
 
-
     const handleUpdate = async () => {
-        await updateExpense(tempExpense.id, tempExpense);
+        const updateData = {
+            ...tempExpense,
+            categoryId: 1, // Hardcoding categoryId until dynamic category selection is implemented
+        };
+        await updateExpense(updateData.id, updateData);
         setEditableExpenseId(null);
         fetchData();
     };
