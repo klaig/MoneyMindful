@@ -116,30 +116,30 @@ public class ExpenseControllerTest {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.notes").value("Lunch"));
   }
+
   @Test
   void updateExpense_ExistingExpense_UpdatesAndReturnsUpdatedExpense() throws Exception {
     Long expenseId = 1L;
-
-    Expense updatedExpense = new Expense();
-    updatedExpense.setId(expenseId);
-    updatedExpense.setUser(user);
-    updatedExpense.setAmount(updateExpenseDto.getAmount());
-    updatedExpense.setNotes(updateExpenseDto.getNotes());
-    updatedExpense.setDateTime(updateExpenseDto.getDateTime());
+    ExpenseDto updatedExpenseDto = new ExpenseDto();
+    updatedExpenseDto.setId(expenseId);
+    updatedExpenseDto.setAmount(updateExpenseDto.getAmount());
+    updatedExpenseDto.setNotes(updateExpenseDto.getNotes());
+    updatedExpenseDto.setDateTime(updateExpenseDto.getDateTime());
+    updatedExpenseDto.setCategoryName("Updated Category");
 
     when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
     when(expenseService.updateExpense(eq(expenseId), any(UpdateExpenseDto.class), eq(user)))
-      .thenReturn(Optional.of(updatedExpense));
+      .thenReturn(Optional.of(updatedExpenseDto));
 
     mockMvc.perform(put("/api/user/expenses/{id}", expenseId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateExpenseDto))
         .principal(() -> "testUser"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.amount").value(120.00))
-      .andExpect(jsonPath("$.notes").value("Updated lunch"));
+      .andExpect(jsonPath("$.amount").value("120.0"))
+      .andExpect(jsonPath("$.notes").value("Updated lunch"))
+      .andExpect(jsonPath("$.categoryName").value("Updated Category"));
   }
-
 
   @Test
   void deleteExpense_ExistingId_DeletesExpense() throws Exception {

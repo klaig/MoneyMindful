@@ -129,11 +129,19 @@ public class ExpenseServiceTest {
 
   @Test
   void updateExpense_ExistingExpense_UpdatesAndReturnsExpense() {
-    when(expenseRepository.findByIdAndUser(1L, testUser)).thenReturn(Optional.of(testExpense));
-    when(expenseRepository.save(any(Expense.class))).thenReturn(testExpense);
-    when(categoryRepository.findById(updateExpenseDto.getCategoryId())).thenReturn(Optional.of(new Category()));
+    ExpenseDto expenseDto = new ExpenseDto();
+    expenseDto.setAmount(updateExpenseDto.getAmount());
+    expenseDto.setCategoryName("Category");
+    expenseDto.setDateTime(updateExpenseDto.getDateTime());
+    expenseDto.setNotes(updateExpenseDto.getNotes());
 
-    Optional<Expense> result = expenseService.updateExpense(1L, updateExpenseDto, testUser);
+    when(expenseRepository.findByIdAndUser(1L, testUser)).thenReturn(Optional.of(testExpense));
+    when(categoryRepository.findById(updateExpenseDto.getCategoryId())).thenReturn(Optional.of(new Category(testUser, "Category")));
+    when(expenseRepository.save(any(Expense.class))).thenReturn(testExpense);
+
+    when(expenseMapper.toDto(any(Expense.class))).thenReturn(expenseDto);
+
+    Optional<ExpenseDto> result = expenseService.updateExpense(1L, updateExpenseDto, testUser);
 
     assertTrue(result.isPresent());
     assertEquals(BigDecimal.valueOf(200.00), result.get().getAmount());
@@ -144,7 +152,7 @@ public class ExpenseServiceTest {
   void updateExpense_NonExistingExpense_ReturnsEmptyOptional() {
     when(expenseRepository.findByIdAndUser(anyLong(), any(User.class))).thenReturn(Optional.empty());
 
-    Optional<Expense> result = expenseService.updateExpense(1L, updateExpenseDto, testUser);
+    Optional<ExpenseDto> result = expenseService.updateExpense(1L, updateExpenseDto, testUser);
 
     assertTrue(result.isEmpty());
   }
