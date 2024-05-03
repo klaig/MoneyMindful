@@ -37,7 +37,7 @@ const Sidebar = () => {
                         </ListItemIcon>
                         <ListItemText primary="Overview" />
                     </ListItemButton>
-                    <ListItemButton key="Budgets">
+                    <ListItemButton onClick={() => navigate('/budgets')} key="Budgets">
                         <ListItemIcon>
                             <AccountBalanceWallet />
                         </ListItemIcon>
@@ -54,12 +54,6 @@ const Sidebar = () => {
                             <TrendingUp />
                         </ListItemIcon>
                         <ListItemText primary="Savings Goals" />
-                    </ListItemButton>
-                    <ListItemButton onClick={() => navigate('/budgets')} key="Budgets">
-                        <ListItemIcon>
-                            <TrendingUp />
-                        </ListItemIcon>
-                        <ListItemText primary="Budgets" />
                     </ListItemButton>
                     <ListItemButton key="Settings">
                         <ListItemIcon>
