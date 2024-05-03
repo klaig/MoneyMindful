@@ -89,13 +89,14 @@ public class ExpenseService {
    */
   @Transactional
   @PreAuthorize("#user.username == authentication.principal.username")
-  public Optional<Expense> updateExpense(Long id, UpdateExpenseDto expenseDetails, User user) {
+  public Optional<ExpenseDto> updateExpense(Long id, UpdateExpenseDto expenseDetails, User user) {
     return expenseRepository.findByIdAndUser(id, user).map(expense -> {
       categoryRepository.findById(expenseDetails.getCategoryId()).ifPresent(expense::setCategory);
       expense.setAmount(expenseDetails.getAmount());
       expense.setDateTime(expenseDetails.getDateTime());
       expense.setNotes(expenseDetails.getNotes());
-      return expenseRepository.save(expense);
+      Expense updatedExpense = expenseRepository.save(expense);
+      return expenseMapper.toDto(updatedExpense); // Convert to DTO here
     });
   }
 

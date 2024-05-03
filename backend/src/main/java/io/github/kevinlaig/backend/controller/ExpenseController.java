@@ -95,13 +95,14 @@ public class ExpenseController {
    * @return Updated Expense
    */
   @PutMapping("/{id}")
-  public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody @Valid UpdateExpenseDto expenseDetails, Principal principal) {
+  public ResponseEntity<ExpenseDto> updateExpense(@PathVariable Long id, @RequestBody @Valid UpdateExpenseDto expenseDetails, Principal principal) {
     String username = principal.getName();
     User user = userRepository.findByUsername(username)
       .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    Optional<Expense> updatedExpense = expenseService.updateExpense(id, expenseDetails, user);
-    return updatedExpense.map(ResponseEntity::ok)
+    Optional<ExpenseDto> updatedExpenseDto = expenseService.updateExpense(id, expenseDetails, user);
+    return updatedExpenseDto
+      .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
