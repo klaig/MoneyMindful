@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { fetchBudgets } from '../services/BudgetService';
-
+//TODO:
+//Button "Add budget"
+//Then you can add a budget name and a limit amount
+//Button "-" to remove a budget
+//
 const Budgets = () => {
     const [budgets, setBudgets] = useState([]);
     const [error, setError] = useState('');
